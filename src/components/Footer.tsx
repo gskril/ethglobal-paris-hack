@@ -1,7 +1,7 @@
-import styled from 'styled-components'
+import { mq } from '@ensdomains/thorin'
+import styled, { css } from 'styled-components'
 
-import { GithubIcon, TwitterIcon } from '@/assets/icons'
-import { mq } from '@/styles/breakpoints'
+import { GithubIcon } from '@/assets/icons'
 
 export const Wrapper = styled.div`
   width: 100%;
@@ -10,10 +10,10 @@ export const Wrapper = styled.div`
   align-items: center;
   gap: 1.5rem;
 
-  @media ${mq.sm.max} {
+  ${mq.sm.max(css`
     gap: 0.75rem;
     flex-direction: column-reverse;
-  }
+  `)}
 `
 
 export const Links = styled.div`
@@ -39,19 +39,19 @@ export function Footer() {
   return (
     <Wrapper>
       <Links>
-        <Link href="https://gregskril.com/" target="_blank">
-          Link 1
+        <Link href="https://warpcast.com/greg" target="_blank">
+          gregskril.eth
         </Link>
-        <Link href="https://gregskril.com/" target="_blank">
-          Link 2
+        <Link href="https://warpcast.com/limone-eth" target="_blank">
+          limone.eth
         </Link>
       </Links>
 
       <Links>
-        <Link href="https://twitter.com/gregskril" target="_blank">
-          <TwitterIcon />
-        </Link>
-        <Link href="https://github.com/gskril/web3-starter" target="_blank">
+        <Link
+          href="https://github.com/gskril/ethglobal-paris-hack"
+          target="_blank"
+        >
           <GithubIcon />
         </Link>
       </Links>

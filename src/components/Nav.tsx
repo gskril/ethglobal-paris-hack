@@ -1,4 +1,5 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit'
+import Link from 'next/link'
 import styled from 'styled-components'
 
 const Wrapper = styled.div`
@@ -9,7 +10,7 @@ const Wrapper = styled.div`
   gap: 1.5rem;
 `
 
-const Title = styled.span`
+const Title = styled(Link)`
   font-size: 1.25rem;
   font-weight: 600;
 `
@@ -17,7 +18,7 @@ const Title = styled.span`
 export function Nav() {
   return (
     <Wrapper>
-      <Title>Web3 Starter</Title>
+      <Title href="/">Bubbles</Title>
       <ConnectButton chainStatus="none" showBalance={false} />
     </Wrapper>
   )
