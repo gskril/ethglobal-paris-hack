@@ -8,11 +8,13 @@ import { Nav } from '@/components/Nav'
 import { Container, Layout } from '@/components/atoms'
 import { useBubbles } from '@/hooks/useBubbles'
 import { useGlobalContext } from '@/hooks/useGlobalContext'
+import { DailyProvider } from '@daily-co/daily-react'
+import { useFetch } from 'usehooks-ts'
+import { GetStatesResponseData } from './api/bubbles/stats'
 
 export default function Live() {
-  const { firebaseToken } = useGlobalContext()
   const bubbles = useBubbles()
-  console.log(bubbles)
+  const stats = useFetch<GetStatesResponseData>('/api/bubbles/stats')
 
   return (
     <>
@@ -26,9 +28,17 @@ export default function Live() {
 
           {bubbles && (
             <BubbleGrid>
-              {bubbles.map((bubble) => (
-                <Bubble key={bubble.slug} {...bubble} />
-              ))}
+              {bubbles.map((bubble) => {
+                const listeners = getNumberOfListeners(bubble.slug, stats.data)
+
+                return (
+                  <Bubble
+                    key={bubble.slug}
+                    listenersCount={listeners}
+                    {...bubble}
+                  />
+                )
+              })}
             </BubbleGrid>
           )}
         </Container>
@@ -39,4 +49,19 @@ export default function Live() {
       <Toaster position="bottom-center" />
     </>
   )
+}
+
+function getNumberOfListeners(
+  roomName: string,
+  apiResponse: GetStatesResponseData | undefined
+): number {
+  if (!apiResponse) {
+    return 0
+  }
+
+  const roomDataArray = apiResponse[roomName]
+  if (roomDataArray) {
+    return roomDataArray.length
+  }
+  return 0
 }

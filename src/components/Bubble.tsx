@@ -1,6 +1,7 @@
 import { Typography } from '@ensdomains/thorin'
 import Link from 'next/link'
 import styled, { css } from 'styled-components'
+import { useParticipantCounts } from '@daily-co/daily-react'
 
 import { Card } from '@/components/atoms'
 import { Bubble as BubbleType } from '@/lib/db/interfaces/bubble'
@@ -39,15 +40,24 @@ const Listener = styled.img(
   `
 )
 
-type BubbleProps = BubbleType
+type BubbleProps = BubbleType & {
+  listenersCount: number
+}
 
-export const Bubble = ({ name, slug, privacyType }: BubbleProps) => {
+export const Bubble = ({
+  name,
+  slug,
+  privacyType,
+  listenersCount,
+}: BubbleProps) => {
   return (
     <Link href={`/b/${slug}`}>
       <Card>
         <GateTag gate={privacyType} />
 
         <Title asProp="span">{name}</Title>
+
+        <p>{listenersCount} listeners</p>
 
         {/* TODO: add preview of listeners */}
         <Listeners people={[]} />
