@@ -1,11 +1,12 @@
 export type Gate =
-  | 'ERC-1155'
-  | 'ERC-20'
-  | 'ERC-721'
-  | 'Farcaster'
-  | 'Open'
-  | 'POAP'
-  | 'Sismo'
+  | 'erc721'
+  | 'erc1155'
+  | 'erc20'
+  | 'sismo'
+  | 'farcaster'
+  | 'lens'
+  | 'poap'
+  | 'open'
 
 export type User = {
   address: string
