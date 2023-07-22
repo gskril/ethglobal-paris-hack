@@ -42,8 +42,6 @@ class SignInHandler {
         // the address and signed message from the client
         const {address, signature, nonce} = body;
 
-        console.log(body, body.signature);
-
         // verify the signature
         const message = `Hi there. Sign this message to prove you own this wallet. This doesn't cost anything.\n\nSecurity code (you can ignore this): ${nonce}`;
 
