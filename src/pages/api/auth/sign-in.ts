@@ -65,15 +65,15 @@ class SignInHandler {
     let isNewUser = false
     if (!user) {
       const { ensLabel, ensAvatarUrl } = await getAddressENS(address)
-      const { farcasterFName, lensHandle } = await getAddressSocialProfiles(
-        address
-      )
+      const { farcasterFName, lensHandle, hasXMTPEnabled } =
+        await getAddressSocialProfiles(address)
       userId = await createUser({
         address: address.toLowerCase(),
         ensLabel: ensLabel as string,
         avatarUrl: ensAvatarUrl as string,
         farcasterFName: farcasterFName as string,
         lensHandle: lensHandle as string,
+        hasEnabledXMTP: hasXMTPEnabled as boolean,
       })
       isNewUser = true
     }

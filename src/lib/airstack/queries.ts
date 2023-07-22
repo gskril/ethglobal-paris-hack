@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export const getWeb3SocialsQuery = gql`
-  query GetAllSocials($address: Address!) {
+  query GetAllSocials($address: Address!, $identity: Identity!) {
     Socials(
       input: {
         filter: { userAssociatedAddresses: { _eq: $address } }
@@ -15,6 +15,14 @@ export const getWeb3SocialsQuery = gql`
         userAssociatedAddresses
         userId
         userCreatedAtBlockTimestamp
+      }
+    }
+    XMTPs(input: { blockchain: ALL, filter: { owner: { _eq: $identity } } }) {
+      XMTP {
+        isXMTPEnabled
+        owner {
+          identity
+        }
       }
     }
   }
@@ -69,20 +77,20 @@ export const getERC721TokenQuery = gql`
         token {
           name
           symbol
-        }
-        contractMetaData {
-          image
-          description
-          externalLink
-          name
-        }
-        projectDetails {
-          collectionName
-          description
-          discordUrl
-          externalUrl
-          imageUrl
-          twitterUrl
+          contractMetaData {
+            image
+            description
+            externalLink
+            name
+          }
+          projectDetails {
+            collectionName
+            description
+            discordUrl
+            externalUrl
+            imageUrl
+            twitterUrl
+          }
         }
         tokenNfts {
           tokenId
@@ -128,14 +136,14 @@ export const getERC20TokenQuery = gql`
         token {
           name
           symbol
-        }
-        projectDetails {
-          collectionName
-          description
-          discordUrl
-          externalUrl
-          imageUrl
-          twitterUrl
+          projectDetails {
+            collectionName
+            description
+            discordUrl
+            externalUrl
+            imageUrl
+            twitterUrl
+          }
         }
       }
     }

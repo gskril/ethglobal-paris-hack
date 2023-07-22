@@ -5,4 +5,5 @@ export interface User {
   avatarUrl?: string
   farcasterFName?: string
   lensHandle?: string
+  hasEnabledXMTP?: boolean
 }

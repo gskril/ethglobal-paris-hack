@@ -2,6 +2,14 @@ export interface AirstackWeb3SocialResponseType {
   Socials: {
     Social: AirstackWeb3Social[]
   }
+  XMTPs: {
+    XMTP: {
+      isXMTPEnabled: boolean
+      owner: {
+        identity: string
+      }
+    }[]
+  }
 }
 
 export interface AirstackWeb3Social {

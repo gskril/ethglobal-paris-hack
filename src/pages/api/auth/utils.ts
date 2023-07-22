@@ -37,21 +37,23 @@ export async function verifyTokenAndGetUser(token: string): Promise<User> {
 
 export const getAddressSocialProfiles = async (
   address: string
-): Promise<{ farcasterFName?: string; lensHandle?: string }> => {
+): Promise<{
+  farcasterFName?: string
+  lensHandle?: string
+  hasXMTPEnabled: boolean
+}> => {
   const airstack = new AirstackHelper()
-  const web3socials = await airstack.getWeb3SocialsForAddress(address)
-  if (!web3socials || web3socials.length === 0) {
-    return {}
-  }
-  const farcasterFName = web3socials.find(
+  const { socials, xmtp } = await airstack.getWeb3SocialsForAddress(address)
+  const farcasterFName = socials?.find(
     (social) => social.dappName === 'farcaster'
   )?.profileName
-  const lensHandle = web3socials.find(
+  const lensHandle = socials?.find(
     (social) => social.dappName === 'lens'
   )?.profileName
   return {
     lensHandle,
     farcasterFName,
+    hasXMTPEnabled: xmtp?.length >= 0,
   }
 }
 

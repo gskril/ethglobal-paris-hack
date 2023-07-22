@@ -34,9 +34,12 @@ export class AirstackHelper {
       const response =
         await this.apolloClient.query<AirstackWeb3SocialResponseType>({
           query: getWeb3SocialsQuery,
-          variables: { address },
+          variables: { address, identity: address },
         })
-      return response.data.Socials.Social
+      return {
+        socials: response.data.Socials.Social,
+        xmtp: response.data.XMTPs.XMTP,
+      }
     } catch (e) {
       console.error('Error while calling Airstack API', e)
       throw e
