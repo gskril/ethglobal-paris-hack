@@ -38,7 +38,7 @@ export type CreateBubbleRequestData = {
   erc20ContractAddress?: string
   erc721ContractAddress?: string
   erc1155ContractAddress?: string
-  erc1155TokenId?: number
+  erc1155TokenId?: string
   erc20amount?: number
   privacyType: BubblePrivacyType
   sismoGroupId?: string

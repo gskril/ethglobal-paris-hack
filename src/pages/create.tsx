@@ -75,7 +75,7 @@ function Content() {
   const [erc20ContractAddress, setErc20ContractAddress] = useState('')
   const [erc721ContractAddress, setErc721ContractAddress] = useState('')
   const [erc1155ContractAddress, setErc1155ContractAddress] = useState('')
-  const [erc1155TokenId, setErc1155TokenId] = useState<number | undefined>()
+  const [erc1155TokenId, setErc1155TokenId] = useState('')
   const [erc20amount, setErc20amount] = useState<number | undefined>()
   const [privacyType, setPrivacyType] = useState<Gate>('open')
   const [sismoGroupId, setSismoGroupId] = useState('')
@@ -141,7 +141,7 @@ function Content() {
             <Input
               placeholder="1"
               label="Token ID"
-              onChange={(e) => setErc1155TokenId(parseInt(e.target.value))}
+              onChange={(e) => setErc1155TokenId(e.target.value)}
             />
           </>
         )}
