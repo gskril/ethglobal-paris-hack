@@ -16,3 +16,20 @@ export const getGroupsQuery = gql`
     }
   }
 `
+
+export const getGroupQuery = gql`
+  query getGroupFromId($groupId: ID!) {
+    group(id: $groupId) {
+      id
+      name
+      description
+      specs
+      generationFrequency
+      latestSnapshot {
+        id
+        size
+        timestamp
+      }
+    }
+  }
+`

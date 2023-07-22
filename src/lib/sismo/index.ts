@@ -1,7 +1,11 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client/core'
 import fetch from 'cross-fetch'
-import { SismoGroup, SismoGroupsResponseType } from '@/lib/sismo/interfaces'
-import { getGroupsQuery } from '@/lib/sismo/queries'
+import {
+  SismoGroup,
+  SismoGroupResponseType,
+  SismoGroupsResponseType,
+} from '@/lib/sismo/interfaces'
+import { getGroupQuery, getGroupsQuery } from '@/lib/sismo/queries'
 
 export class SismoHelper {
   apolloClient: ApolloClient<any>
@@ -28,6 +32,19 @@ export class SismoHelper {
         variables: options,
       })
       return response.data.groups
+    } catch (e) {
+      console.error('Error while calling Sismo API', e)
+      throw e
+    }
+  }
+
+  async getGroup(groupId: string): Promise<SismoGroup> {
+    try {
+      const response = await this.apolloClient.query<SismoGroupResponseType>({
+        query: getGroupQuery,
+        variables: { groupId },
+      })
+      return response.data.group
     } catch (e) {
       console.error('Error while calling Sismo API', e)
       throw e

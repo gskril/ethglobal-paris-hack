@@ -2,6 +2,10 @@ export interface SismoGroupsResponseType {
   groups: SismoGroup[]
 }
 
+export interface SismoGroupResponseType {
+  group: SismoGroup
+}
+
 export interface SismoGroup {
   id: string
   generationFrequency: string

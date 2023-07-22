@@ -1,8 +1,14 @@
 import { Bubble, BubblePrivacyType } from '@/lib/db/interfaces/bubble'
 import { User } from '@/lib/db/interfaces/user'
 import { AirstackHelper } from '@/lib/airstack'
+import { SismoConnectResponse } from '@sismo-core/sismo-connect-server'
+import { verifySismoResult } from '@/lib/sismo/sismo-connect'
 
-export const checkBubbleAccess = async (bubble: Bubble, user: User) => {
+export const checkBubbleAccess = async (
+  bubble: Bubble,
+  user: User,
+  sismoResponse?: SismoConnectResponse
+) => {
   switch (bubble.privacyType) {
     case BubblePrivacyType.OPEN:
       return true
@@ -21,7 +27,7 @@ export const checkBubbleAccess = async (bubble: Bubble, user: User) => {
         user.address!
       )
     case BubblePrivacyType.SISMO:
-      return SismoHandler(bubble.sismoGroupId!, user.address!)
+      return SismoHandler(bubble.sismoGroupId!, sismoResponse!)
     case BubblePrivacyType.POAP:
       return POAPHandler(bubble.poapEventId!, user.address!)
     case BubblePrivacyType.FARCASTER:
@@ -80,7 +86,15 @@ const POAPHandler = async (
 
 const SismoHandler = async (
   sismoGroupId: string,
-  response: any
+  response: SismoConnectResponse
 ): Promise<boolean> => {
-  return true
+  const verificationResult = await verifySismoResult(
+    [{ groupId: sismoGroupId }],
+    response
+  )
+  return verificationResult.response.proofs.every(
+    (proof) =>
+      proof.claims?.every((claim) => claim.isSelectableByUser) &&
+      proof.auths?.every((auth) => auth.isSelectableByUser)
+  )
 }
