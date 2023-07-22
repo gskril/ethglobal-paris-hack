@@ -12,3 +12,17 @@ export interface AirstackWeb3Social {
   userId: string
   userCreatedAtBlockTimestamp: string
 }
+
+export interface AirstackPOAPResponseType {
+  Poaps: {
+    Poap: AirstackPOAP[]
+  }
+}
+
+export interface AirstackPOAP {
+  eventId: string
+  owner: {
+    identity: string
+    addresses: string[]
+  }
+}

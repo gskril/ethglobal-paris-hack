@@ -11,6 +11,8 @@ const config = {
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
 }
 
+let firebaseSettingsSet = false
+
 const getFirebase = () => {
   if (typeof window !== undefined && !firebase.apps.length) {
     return firebase.initializeApp(config)

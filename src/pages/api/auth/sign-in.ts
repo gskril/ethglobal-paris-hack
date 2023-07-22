@@ -10,10 +10,7 @@ import {
 import {IsEthereumAddress, IsNumber, IsString} from "class-validator";
 import {getAddressENS, getAddressSocialProfiles, getUserAuthToken} from "@/pages/api/auth/utils";
 import {createUser, getUserByAddress} from "@/lib/db/services/user";
-import {Address, createPublicClient, http, verifyMessage} from "viem";
-import {mainnet} from "wagmi/chains";
-import {normalize} from "viem/ens";
-import {AirstackHelper} from "@/lib/airstack";
+import {Address, verifyMessage} from "viem";
 
 export type SignInResponseData = {
     token: string;

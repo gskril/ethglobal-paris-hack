@@ -18,6 +18,7 @@ if (!admin.apps.length) {
       clientEmail: FIREBASE_CLIENT_EMAIL,
     }),
   })
+  admin.firestore().settings({ ignoreUndefinedProperties: true, merge: true })
 }
 
 export const auth = admin.auth()

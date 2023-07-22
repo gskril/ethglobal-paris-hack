@@ -98,3 +98,10 @@ export async function createFirestoreCollectionDocument(
 
   return doc.id
 }
+
+export async function deleteFirestoreCollectionDocument(
+  collectionName: string,
+  docId: string
+): Promise<void> {
+  return await firestore.collection(collectionName).doc(docId).delete()
+}
