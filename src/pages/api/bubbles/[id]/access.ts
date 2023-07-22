@@ -65,7 +65,13 @@ class BubbleAccessHandler {
     }
 
     if (bubble.userId === user.id) {
-      return generateDailyJWT(bubble.slug, user.id as string, getUserName(user))
+      return {
+        accessToken: generateDailyJWT(
+          bubble.slug,
+          user.id as string,
+          getUserName(user)
+        ),
+      }
     }
 
     const canAccessBubble = await checkBubbleAccess(
