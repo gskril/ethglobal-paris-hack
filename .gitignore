@@ -20,7 +20,7 @@
 *.pem
 
 # firebase
-.firebase
+.firebaserc
 
 # debug
 npm-debug.log*

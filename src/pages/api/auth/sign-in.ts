@@ -15,9 +15,11 @@ import {
 } from '@/pages/api/auth/utils'
 import { createUser, getUserByAddress } from '@/lib/db/services/user'
 import { Address, verifyMessage } from 'viem'
+import { auth } from 'firebase-admin'
 
 export type SignInResponseData = {
   token: string
+  firebaseToken: string
   isNewUser: boolean
 }
 
@@ -76,7 +78,8 @@ class SignInHandler {
       isNewUser = true
     }
     const token = getUserAuthToken(user?.id as string)
-    return { token, isNewUser }
+    const firebaseToken = await auth().createCustomToken(userId)
+    return { token, firebaseToken, isNewUser }
   }
 }
 
