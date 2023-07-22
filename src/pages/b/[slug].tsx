@@ -4,6 +4,7 @@ import {
   Helper,
   Spinner,
   Typography,
+  mq,
 } from '@ensdomains/thorin'
 import { useRouter } from 'next/router'
 import { Toaster, toast } from 'react-hot-toast'
@@ -33,7 +34,6 @@ import { BubbleAccessResponseData } from '@/pages/api/bubbles/[id]/access'
 import { Bubble } from '@/lib/db/interfaces/bubble'
 import { getUserName } from '@/lib/client-db/services/user'
 import { formatAddress } from '@/lib/utils'
-import { Address } from 'viem'
 import { User } from '@/lib/db/interfaces/user'
 
 export default function Bubble() {
@@ -79,6 +79,20 @@ const HeadingWrapper = styled.div(
       justify-content: space-between;
       align-items: center;
     }
+  `
+)
+
+const CardCols = styled.div<{ $active?: boolean }>(
+  ({ $active, theme }) => css`
+    ${$active &&
+    css`
+      display: grid;
+      gap: ${theme.space['4']};
+
+      ${mq.sm.min(css`
+        grid-template-columns: 3fr 1.5fr;
+      `)}
+    `}
   `
 )
 
@@ -242,15 +256,126 @@ function Content({
         </div>
       </HeadingWrapper>
 
-      <Card $gap="medium">
-        <ParticipantGrid>
-          {participants.map((person) => (
-            <Participant key={person.user_id} person={person} />
-          ))}
-        </ParticipantGrid>
-      </Card>
+      <CardCols $active={!!bubble.farcasterCastHash}>
+        <Card $gap="medium">
+          <ParticipantGrid>
+            {participants.map((person) => (
+              <Participant key={person.user_id} person={person} />
+            ))}
+          </ParticipantGrid>
+        </Card>
+
+        {bubble.farcasterCastHash && (
+          <FarcasterDiscussion hash={bubble.farcasterCastHash} />
+        )}
+      </CardCols>
 
       <DailyAudio />
     </>
   )
+}
+
+const Casts = styled.div(
+  ({ theme }) => css`
+    display: flex;
+    flex-direction: column;
+    gap: ${theme.space['4']};
+
+    .cast {
+      display: flex;
+      flex-direction: column;
+      gap: ${theme.space['1']};
+
+      &__author {
+        font-weight: 500;
+      }
+
+      &__text {
+        padding: ${theme.space['2']};
+        border-radius: ${theme.radii.medium};
+        background-color: ${theme.colors.accentSurface};
+      }
+    }
+  `
+)
+
+function FarcasterDiscussion({
+  hash = '0xe51ceaedf3c9ba6a7009b3f933a30105b82958dd',
+}: {
+  hash: string
+}) {
+  const farcasterReplies = useFetch<SearchCasterResponse>(
+    `https://searchcaster.xyz/api/search?merkleRoot=${hash}`
+  )
+
+  const reversedCasts = farcasterReplies.data?.casts.slice().reverse()
+
+  return (
+    <Card>
+      <Typography fontVariant="headingFour" style={{ marginBottom: '0.5rem' }}>
+        Discussion
+      </Typography>
+
+      <Casts>
+        {reversedCasts?.map((cast) => {
+          return (
+            <div key={cast.merkleRoot} className="cast">
+              <p className="cast__author">@{cast.body.username}</p>
+              <p className="cast__text">{cast.body.data.text}</p>
+            </div>
+          )
+        })}
+      </Casts>
+    </Card>
+  )
+}
+
+type SearchCasterResponse = {
+  casts: Array<{
+    body: {
+      publishedAt: number
+      username: string
+      data: {
+        text: string
+        image: any
+        replyParentMerkleRoot?: string
+        threadMerkleRoot: string
+      }
+    }
+    meta: {
+      displayName: string
+      avatar: string
+      isVerifiedAvatar: boolean
+      numReplyChildren: number
+      reactions: {
+        count: number
+        type: string
+      }
+      recasts: {
+        count: number
+      }
+      watches: {
+        count: number
+      }
+      replyParentUsername: {
+        fid?: number
+        username?: string
+      }
+      mentions?: Array<{
+        fid: number
+        pfp: {
+          url: string
+          verified: boolean
+        }
+        username: string
+        displayName: string
+      }>
+    }
+    merkleRoot: string
+    uri: string
+  }>
+  meta: {
+    count: number
+    responseTime: number
+  }
 }
