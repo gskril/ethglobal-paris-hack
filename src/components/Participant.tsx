@@ -1,4 +1,4 @@
-import { User } from '@/types'
+import { User } from '@/lib/db/interfaces/user'
 import { Typography } from '@ensdomains/thorin'
 import styled, { css } from 'styled-components'
 
@@ -50,8 +50,10 @@ const Image = styled.img(
 export function Participant({ person }: { person: User }) {
   return (
     <ParticipantWrapper>
-      <Image src={person.avatar} alt={person.name} />
-      <Typography asProp="span">{person.name}</Typography>
+      <Image src={person.avatarUrl} alt="" />
+      <Typography asProp="span">
+        {person.ensLabel || person.farcasterFName}
+      </Typography>
     </ParticipantWrapper>
   )
 }

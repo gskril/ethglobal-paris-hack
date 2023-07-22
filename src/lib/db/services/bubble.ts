@@ -32,7 +32,9 @@ export async function createBubble(bubble: Bubble): Promise<string> {
   return await createFirestoreCollectionDocument(COLLECTION_NAME, bubble)
 }
 
-export async function deleteBubble(bubbleId: string): Promise<void> {
+export async function deleteBubble(
+  bubbleId: string
+): Promise<FirebaseFirestore.WriteResult> {
   return await deleteFirestoreCollectionDocument(COLLECTION_NAME, bubbleId)
 }
 
