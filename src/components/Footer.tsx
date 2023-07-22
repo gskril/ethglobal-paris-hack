@@ -35,17 +35,37 @@ const Link = styled.a`
   }
 `
 
+const HideMobile = styled.div`
+  ${mq.sm.max(css`
+    display: none;
+  `)}
+`
+
+const HideDesktop = styled.div`
+  ${mq.sm.min(css`
+    display: none;
+  `)}
+`
+
 export function Footer() {
   return (
     <Wrapper>
-      <Links>
-        <Link href="https://warpcast.com/greg" target="_blank">
-          gregskril.eth
-        </Link>
-        <Link href="https://warpcast.com/limone-eth" target="_blank">
-          limone.eth
-        </Link>
-      </Links>
+      <HideMobile>
+        <Links>
+          <Link href="https://warpcast.com/greg" target="_blank">
+            gregskril.eth
+          </Link>
+          <Link href="https://warpcast.com/limone-eth" target="_blank">
+            limone.eth
+          </Link>
+        </Links>
+      </HideMobile>
+
+      <HideDesktop>
+        <Links>
+          <Link href="/create">Create a Bubble</Link>
+        </Links>
+      </HideDesktop>
 
       <Links>
         <Link
