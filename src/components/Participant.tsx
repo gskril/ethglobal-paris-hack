@@ -1,4 +1,6 @@
+import { getUserName } from '@/lib/client-db/services/user'
 import { User } from '@/lib/db/interfaces/user'
+import { formatAddress } from '@/lib/utils'
 import { DailyParticipant } from '@daily-co/daily-js'
 import { Typography } from '@ensdomains/thorin'
 import styled, { css } from 'styled-components'
@@ -50,12 +52,13 @@ const Image = styled.img(
 
 export function Participant({ person }: { person: DailyParticipant }) {
   const userData = person.userData as User
+  const fallbackImg =
+    'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541'
 
   return (
     <ParticipantWrapper>
-      {/* <Image src={person.avatarUrl} alt="" /> */}
-      {/* <Typography asProp="span">{person.ensLabel || person.farcasterFName}</Typography> */}
-      <Typography>{person.user_name || person.user_id}</Typography>
+      <Image src={userData.avatarUrl || fallbackImg} alt="" />
+      <Typography asProp="span">{getUserName(userData)}</Typography>
     </ParticipantWrapper>
   )
 }
