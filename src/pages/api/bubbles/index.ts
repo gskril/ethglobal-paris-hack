@@ -11,7 +11,13 @@ import {
   ValidationPipe,
 } from 'next-api-decorators'
 
-import { IsIn, IsNumber, IsOptional, IsString } from 'class-validator'
+import {
+  IsEthereumAddress,
+  IsIn,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator'
 import { Bubble, BubblePrivacyType } from '@/lib/db/interfaces/bubble'
 import { JwtAuthGuard } from '@/lib/middlewares'
 import { DailyHelper } from '@/lib/daily'
@@ -55,11 +61,11 @@ export class CreateBubbleDTO {
   poapEventId?: string
 
   @IsOptional()
-  @IsString()
+  @IsEthereumAddress()
   erc721ContractAddress?: string
 
   @IsOptional()
-  @IsString()
+  @IsEthereumAddress()
   erc1155ContractAddress?: string
 
   @IsOptional()
@@ -67,7 +73,7 @@ export class CreateBubbleDTO {
   erc1155TokenId?: number
 
   @IsOptional()
-  @IsString()
+  @IsEthereumAddress()
   erc20ContractAddress?: string
 
   @IsOptional()
