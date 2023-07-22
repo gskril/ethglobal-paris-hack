@@ -1,4 +1,4 @@
-import { Heading } from '@ensdomains/thorin'
+import { Heading, Helper } from '@ensdomains/thorin'
 import { Toaster } from 'react-hot-toast'
 
 import { Bubble, BubbleGrid } from '@/components/Bubble'
@@ -23,6 +23,10 @@ export default function Live() {
 
         <Container as="main">
           <Heading style={{ marginBottom: '1rem' }}>Live Right Now</Heading>
+
+          {bubbles && bubbles.length === 0 && (
+            <Helper>No Bubbles are currently live</Helper>
+          )}
 
           {bubbles && (
             <BubbleGrid>

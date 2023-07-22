@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react'
 import { getBubbles } from '@/lib/client-db/services/bubble'
 import { Bubble } from '@/lib/db/interfaces/bubble'
 
-export const useBubbles = (): Bubble[] => {
-  const [bubbles, setBubbles] = useState<Bubble[]>([])
+export const useBubbles = (): Bubble[] | undefined => {
+  const [bubbles, setBubbles] = useState<Bubble[] | undefined>(undefined)
 
   useEffect(() => {
     const fetchBubbles = async () => {
