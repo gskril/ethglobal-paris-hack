@@ -149,3 +149,46 @@ export const getERC20TokenQuery = gql`
     }
   }
 `
+
+export const getERC1155TokenQuery = gql`
+  query tokens(
+    $tokenAddress: Address!
+    $tokenId: String!
+    $address: Identity!
+  ) {
+    erc1155: TokenBalances(
+      input: {
+        filter: {
+          owner: { _in: [$address] }
+          tokenType: { _in: [ERC1155] }
+          tokenAddress: { _eq: $tokenAddress }
+          tokenId: { _eq: $tokenId }
+        }
+        limit: 10
+        blockchain: ethereum
+      }
+    ) {
+      data: TokenBalance {
+        amount
+        formattedAmount
+        chainId
+        id
+        tokenAddress
+        tokenId
+        tokenType
+        token {
+          name
+          symbol
+          projectDetails {
+            collectionName
+            description
+            discordUrl
+            externalUrl
+            imageUrl
+            twitterUrl
+          }
+        }
+      }
+    }
+  }
+`

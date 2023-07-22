@@ -66,10 +66,16 @@ const ERC721Handler = async (
 
 const ERC1155Handler = async (
   contractAddress: string,
-  tokenId: number,
+  tokenId: string,
   walletAddress: string
 ): Promise<boolean> => {
-  return true
+  const airStack = new AirstackHelper()
+  const erc721tokens = await airStack.getERC1155BalanceOfWallet(
+    contractAddress,
+    tokenId,
+    walletAddress
+  )
+  return erc721tokens?.length >= 0
 }
 
 const POAPHandler = async (

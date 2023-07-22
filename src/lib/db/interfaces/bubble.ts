@@ -17,7 +17,7 @@ export interface Bubble {
   poapEventId?: string
   erc721ContractAddress?: string
   erc1155ContractAddress?: string
-  erc1155TokenId?: number
+  erc1155TokenId?: string
   erc20ContractAddress?: string
   erc20amount?: number
   sismoGroupId?: string

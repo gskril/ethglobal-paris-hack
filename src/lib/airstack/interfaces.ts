@@ -109,3 +109,31 @@ export interface AirstackERC20Token {
     twitterUrl: string
   }
 }
+
+export interface AirstackERC1155TokenResponseType {
+  erc1155: {
+    data: AirstackERC1155Token[]
+  }
+}
+
+export interface AirstackERC1155Token {
+  amount: string
+  formattedAmount: number
+  chainId: string
+  id: string
+  tokenAddress: string
+  tokenId: string
+  tokenType: 'ERC1155'
+  token: {
+    name: string
+    symbol: string
+  }
+  projectDetails: {
+    collectionName: string
+    externalUrl: string
+    discordUrl: string
+    description: string
+    imageUrl: string
+    twitterUrl: string
+  }
+}

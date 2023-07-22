@@ -2,6 +2,7 @@ import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client/core'
 import fetch from 'cross-fetch'
 
 import {
+  AirstackERC1155TokenResponseType,
   AirstackERC20TokenResponseType,
   AirstackERC721Token,
   AirstackERC721TokenResponseType,
@@ -13,6 +14,7 @@ import {
   getWeb3SocialsQuery,
   getERC721TokenQuery,
   getERC20TokenQuery,
+  getERC1155TokenQuery,
 } from '@/lib/airstack/queries'
 
 export class AirstackHelper {
@@ -81,6 +83,24 @@ export class AirstackHelper {
           variables: { address, tokenAddress },
         })
       return response.data.erc20.data
+    } catch (e) {
+      console.error('Error while calling Airstack API', e)
+      throw e
+    }
+  }
+
+  async getERC1155BalanceOfWallet(
+    tokenAddress: string,
+    tokenId: string,
+    address: string
+  ) {
+    try {
+      const response =
+        await this.apolloClient.query<AirstackERC1155TokenResponseType>({
+          query: getERC1155TokenQuery,
+          variables: { address, tokenId, tokenAddress },
+        })
+      return response.data.erc1155.data
     } catch (e) {
       console.error('Error while calling Airstack API', e)
       throw e

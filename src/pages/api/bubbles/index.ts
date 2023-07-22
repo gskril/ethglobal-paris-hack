@@ -70,7 +70,7 @@ export class CreateBubbleDTO {
 
   @IsOptional()
   @IsNumber()
-  erc1155TokenId?: number
+  erc1155TokenId?: string
 
   @IsOptional()
   @IsEthereumAddress()
