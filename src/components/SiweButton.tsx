@@ -45,6 +45,9 @@ export function SiweButton() {
     }
   )
 
+  const responseIsLoading =
+    signature.data && !sendSignature.data && !sendSignature.error
+
   useEffect(() => {
     const fetchCurrentUserData = async (firebaseToken: string) => {
       const user = await loginWithToken(firebaseToken!)
@@ -73,10 +76,11 @@ export function SiweButton() {
       ) : !token && !firebaseToken ? (
         <StyledButton
           prefix={<EthSVG />}
-          disabled={!isMounted}
+          loading={responseIsLoading || signature.isLoading}
+          disabled={!isMounted || responseIsLoading || signature.isLoading}
           onClick={() => signature.signMessage?.()}
         >
-          Sign-In with Ethereum
+          {signature.isLoading ? 'Sign in Wallet' : 'Sign-In with Ethereum'}
         </StyledButton>
       ) : (
         <Button

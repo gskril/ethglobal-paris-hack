@@ -41,9 +41,11 @@ async function handleSubmit(
   e: React.FormEvent<HTMLFormElement>,
   router: NextRouter,
   token: string,
-  body: CreateBubbleRequestData
+  body: CreateBubbleRequestData,
+  setIsLoading: (isLoading: boolean) => void
 ) {
   e.preventDefault()
+  setIsLoading(true)
 
   let farcasterHash = body.farcasterCastHash
 
@@ -69,9 +71,11 @@ async function handleSubmit(
   if (!res.ok) {
     console.error(res)
     toast.error('Something went wrong')
+    setIsLoading(false)
     return
   }
 
+  setIsLoading(false)
   const bubble = (await res.json()) as CreateBubbleResponseData
   toast.success('Bubble created')
   router.push(`/b/${bubble.slug}`)
@@ -81,6 +85,7 @@ function Content() {
   const { address, token } = useGlobalContext()
   const isMounted = useIsMounted()
   const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false)
 
   const [name, setName] = useState('')
   const [farcasterCastHash, setFarcasterCastHash] = useState('')
@@ -109,7 +114,7 @@ function Content() {
   if (!isMounted) return null
 
   return (
-    <form onSubmit={(e) => handleSubmit(e, router, token!, body)}>
+    <form onSubmit={(e) => handleSubmit(e, router, token!, body, setIsLoading)}>
       <Heading style={{ marginBottom: '1rem' }}>Create a Bubble</Heading>
 
       <Card $gap="medium">
@@ -198,7 +203,9 @@ function Content() {
         />
 
         {address && token ? (
-          <Button type="submit">Create and Go Live</Button>
+          <Button type="submit" disabled={isLoading} loading={isLoading}>
+            Create and Go Live
+          </Button>
         ) : (
           <SiweButton />
         )}
