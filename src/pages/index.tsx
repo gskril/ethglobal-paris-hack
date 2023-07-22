@@ -11,6 +11,7 @@ import { Meta } from '@/components/Meta'
 import { Nav } from '@/components/Nav'
 import { Container, Layout } from '@/components/atoms'
 import { useIsMounted } from '@/hooks/useIsMounted'
+import { useGlobalContext } from '@/hooks/useGlobalContext'
 
 import { NonceResponseData } from './api/auth/nonce'
 import { SignInRequestData, SignInResponseData } from './api/auth/sign-in'
@@ -74,10 +75,7 @@ export default function Home() {
     }
   )
 
-  const [storedToken, setStoredToken] = useLocalStorage(
-    'firebase-token',
-    sendSignature?.data?.token
-  )
+  const { token: storedToken, setToken: setStoredToken } = useGlobalContext()
 
   useEffect(() => {
     if (sendSignature?.data?.token) {

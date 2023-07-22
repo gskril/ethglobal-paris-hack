@@ -6,6 +6,7 @@ import type { AppProps } from 'next/app'
 import { ThemeProvider } from 'styled-components'
 import { WagmiConfig } from 'wagmi'
 
+import { GlobalContextProvider } from '@/context'
 import { chains, wagmiConfig } from '@/providers'
 import '@/styles/style.scss'
 
@@ -16,7 +17,9 @@ export default function App({ Component, pageProps }: AppProps) {
         <ThemeProvider theme={lightTheme}>
           <ThorinGlobalStyles />
           <RainbowKitProvider chains={chains} modalSize="compact">
-            <Component {...pageProps} />
+            <GlobalContextProvider>
+              <Component {...pageProps} />
+            </GlobalContextProvider>
           </RainbowKitProvider>
         </ThemeProvider>
       </WagmiConfig>

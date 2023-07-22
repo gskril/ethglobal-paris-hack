@@ -1,7 +1,6 @@
 import { Heading, Helper, Spinner, Typography } from '@ensdomains/thorin'
 import { useRouter } from 'next/router'
 import { Toaster } from 'react-hot-toast'
-import styled, { css } from 'styled-components'
 
 import { Footer } from '@/components/Footer'
 import { GateTag } from '@/components/GateTag'

@@ -1,10 +1,8 @@
 import { Button, Profile, mq } from '@ensdomains/thorin'
 import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import Link from 'next/link'
-import { useEffect } from 'react'
 import toast from 'react-hot-toast'
 import styled, { css } from 'styled-components'
-import { useLocalStorage } from 'usehooks-ts'
 import { useAccount, useDisconnect, useEnsAvatar, useEnsName } from 'wagmi'
 
 import { useIsMounted } from '@/hooks/useIsMounted'
@@ -73,13 +71,7 @@ const ProfileMobile = styled(Profile)`
 `
 
 export function Nav() {
-  const [storedToken, setStoredToken] = useLocalStorage('firebase-token', '')
-
-  const { address } = useAccount({
-    onDisconnect: () => {
-      setStoredToken('')
-    },
-  })
+  const { address } = useAccount()
   const { data: ensName } = useEnsName({ address: address })
   const { data: ensAvatar } = useEnsAvatar({ name: ensName })
 
