@@ -1,4 +1,10 @@
-import { Button, Heading, Helper, Spinner } from '@ensdomains/thorin'
+import {
+  Button,
+  Heading,
+  Helper,
+  Spinner,
+  Typography,
+} from '@ensdomains/thorin'
 import { useRouter } from 'next/router'
 import { Toaster, toast } from 'react-hot-toast'
 import {
@@ -22,18 +28,19 @@ import { Participant, ParticipantGrid } from '@/components/Participant'
 import { useGlobalContext } from '@/hooks/useGlobalContext'
 import { SiweButton } from '@/components/SiweButton'
 import { useIsMounted } from '@/hooks/useIsMounted'
-import { useBubbleBySlug } from '@/hooks/useBubble'
+import { useBubble } from '@/hooks/useBubble'
 import { BubbleAccessResponseData } from '@/pages/api/bubbles/[id]/access'
 import { Bubble } from '@/lib/db/interfaces/bubble'
 import { getUserName } from '@/lib/client-db/services/user'
 import { formatAddress } from '@/lib/utils'
 import { Address } from 'viem'
+import { User } from '@/lib/db/interfaces/user'
 
 export default function Bubble() {
   const router = useRouter()
   const { slug } = router.query
   const isMounted = useIsMounted()
-  const bubble = useBubbleBySlug(slug as string)
+  const { bubble, user: bubbleCreator } = useBubble(slug as string)
 
   return (
     <DailyProvider
@@ -46,7 +53,9 @@ export default function Bubble() {
         <Nav />
 
         <Container as="main">
-          {isMounted && <Content bubble={bubble} />}
+          {isMounted && (
+            <Content bubble={bubble} bubbleCreator={bubbleCreator} />
+          )}
         </Container>
 
         <Footer />
@@ -73,7 +82,13 @@ const HeadingWrapper = styled.div(
   `
 )
 
-function Content({ bubble }: { bubble: Bubble | null }) {
+function Content({
+  bubble,
+  bubbleCreator,
+}: {
+  bubble: Bubble | null
+  bubbleCreator: User | null
+}) {
   const router = useRouter()
   const { address, token, user } = useGlobalContext()
 
@@ -104,7 +119,14 @@ function Content({ bubble }: { bubble: Bubble | null }) {
   if (auth.error) {
     return (
       <>
-        <Heading style={{ marginBottom: '1rem' }}>{bubble.name}</Heading>
+        <HeadingWrapper style={{ marginBottom: '1rem' }}>
+          <div>
+            <Heading>{bubble.name}</Heading>
+            <Typography>
+              Creator: {getUserName(bubbleCreator || undefined)}
+            </Typography>
+          </div>
+        </HeadingWrapper>
 
         <Card
           $gap="medium"
@@ -137,8 +159,13 @@ function Content({ bubble }: { bubble: Bubble | null }) {
 
   return (
     <>
-      <HeadingWrapper>
-        <Heading style={{ marginBottom: '1rem' }}>{bubble.name}</Heading>
+      <HeadingWrapper style={{ marginBottom: '1rem' }}>
+        <div>
+          <Heading>{bubble.name}</Heading>
+          <Typography>
+            Creator: {getUserName(bubbleCreator || undefined)}
+          </Typography>
+        </div>
 
         <div className="buttons">
           {meetingState === 'joining-meeting' ? (
