@@ -1,3 +1,4 @@
+import { Heading } from '@ensdomains/thorin'
 import { Toaster } from 'react-hot-toast'
 
 import { Bubble, BubbleGrid } from '@/components/Bubble'
@@ -21,10 +22,12 @@ export default function Live() {
     <>
       <Meta />
 
-      <Layout>
+      <Layout $verticalCenter={false}>
         <Nav />
 
         <Container as="main">
+          <Heading style={{ marginBottom: '1rem' }}>Live Right Now</Heading>
+
           <BubbleGrid>
             {bubbles.map((bubble) => (
               <Bubble key={bubble.slug} {...bubble} />
