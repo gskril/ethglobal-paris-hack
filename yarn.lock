@@ -2531,16 +2531,16 @@
     ethers "^5.6.1"
     ffjavascript "^0.2.55"
 
-"@sismo-core/hydra-s2@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@sismo-core/hydra-s2/-/hydra-s2-1.0.0.tgz#94394d936babcf389563d19568033fbb6b3233ef"
-  integrity sha512-fnBrGazUvKxBSr+Wr2IEZILHpz3aN8G0ZvwVpahFNvls7YuEwFS0JupeV03aogGFQtonjtFvRZAEX4BuEO+kYw==
+"@sismo-core/hydra-s3@^1.0.0":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@sismo-core/hydra-s3/-/hydra-s3-1.0.3.tgz#f2944740e7b7fec3ce37855b15e179b2da90c24f"
+  integrity sha512-cdg76l4SxunSCXswykrwRDbeK0u/Ut2Luu0VT/4uQvH9XIr1DLJupqjYTbP35olK24DCHr6WKsyJAaPXmQQiow==
   dependencies:
     "@sismo-core/crypto" "^1.1.4"
-    "@sismo-core/kv-merkle-tree" "^1.0.4"
-    snarkjs "^0.6.8"
+    "@sismo-core/kv-merkle-tree" "^1.1.0"
+    snarkjs "^0.7.0"
 
-"@sismo-core/kv-merkle-tree@^1.0.4":
+"@sismo-core/kv-merkle-tree@^1.1.0":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@sismo-core/kv-merkle-tree/-/kv-merkle-tree-1.1.1.tgz#963e039654ac1cf6eda1fc7cb60eaf845f15e0fc"
   integrity sha512-72QdScVNPmhR8IORRKFlV3QZ2Z3i4MN5CG8HzEaP+6IcGzOrvv3SGji4VRgctIUZAFYKmlHxx0uaZPZjR83zSQ==
@@ -2550,30 +2550,30 @@
     pako "^2.1.0"
     tslib "^2.4.0"
 
-"@sismo-core/sismo-connect-client@^0.0.10":
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/@sismo-core/sismo-connect-client/-/sismo-connect-client-0.0.10.tgz#c7b873dc97d7e0d7155fffb3d20ad0043be581c2"
-  integrity sha512-lCRq3Q+GJBANn1P5FP7MqYDOSMdNwfAhZvrIWAcNhDKt1ImF6JiuedzhbNrBXIErAmBHnCTtpg8RQIwBdyd8og==
+"@sismo-core/sismo-connect-client@0.0.20":
+  version "0.0.20"
+  resolved "https://registry.yarnpkg.com/@sismo-core/sismo-connect-client/-/sismo-connect-client-0.0.20.tgz#d0337f1e6c678b2e67f0c8dff2794c4a4e869e94"
+  integrity sha512-2AEfnVGQfhEwWqyTtBF9o2kOlm22cPmM+qG70zyZW+oN169rT9b9MMqM9qkWkknGm6aTPg8wq0dBQUbmaG8DsA==
   dependencies:
     "@ethersproject/bignumber" "5.7.0"
     js-base64 "^3.7.5"
     pako "^2.1.0"
     viem "^0.3.1"
 
-"@sismo-core/sismo-connect-react@^0.0.11":
-  version "0.0.11"
-  resolved "https://registry.yarnpkg.com/@sismo-core/sismo-connect-react/-/sismo-connect-react-0.0.11.tgz#fa1e44e3c6414af7ef9b9f1c461437a81b57e3d6"
-  integrity sha512-XLRt4Bcl5ibrGMB2ZvIQ9hIJxO/IMJblfCg7uXv930EAiXl9o8h8OtHoXBfsBbBjkUDC5AqrwYE4PpciYMVTzQ==
+"@sismo-core/sismo-connect-react@^0.0.20":
+  version "0.0.20"
+  resolved "https://registry.yarnpkg.com/@sismo-core/sismo-connect-react/-/sismo-connect-react-0.0.20.tgz#602c3703d1c7d90c31c17882d3aacb2c8ebeb333"
+  integrity sha512-8hc4Qh2aaowhGxudeTFA+ZWGb7OLJR7c4ui4VNd+fDqr84extCz2XKIm+tFaFQJTGP/FFGxt/GKAyBSaPGfymw==
   dependencies:
-    "@sismo-core/sismo-connect-client" "^0.0.10"
+    "@sismo-core/sismo-connect-client" "0.0.20"
 
-"@sismo-core/sismo-connect-server@^0.0.10":
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/@sismo-core/sismo-connect-server/-/sismo-connect-server-0.0.10.tgz#ec491feeea6b89cc3589f7adf4a0ce1a40546fbf"
-  integrity sha512-IkEOVnfluv9ZnubDf8jJZ7s8p0CdQY6EXySHwX6oWfCvzhPC/UM1R3ZEOFVXVIOUaO6SiruDwlM49YsyPc8ntg==
+"@sismo-core/sismo-connect-server@^0.0.20":
+  version "0.0.20"
+  resolved "https://registry.yarnpkg.com/@sismo-core/sismo-connect-server/-/sismo-connect-server-0.0.20.tgz#2b2dc1ac26e54b7b44eaa4a1ed392d7bf0b84093"
+  integrity sha512-i+p9JNh84RqHiUKssdMwR70ltzz7ahTv1sKI0FFgz80v6P+I0GbtZ2DI850mwnhPdKiekvvyfUgsr+8tyn/15w==
   dependencies:
     "@ethersproject/bignumber" "^5.7.0"
-    "@sismo-core/hydra-s2" "^1.0.0"
+    "@sismo-core/hydra-s3" "^1.0.0"
 
 "@solana/buffer-layout@^4.0.0":
   version "4.0.1"
@@ -5141,7 +5141,7 @@ ffjavascript@0.2.57:
     wasmcurves "0.2.0"
     web-worker "^1.2.0"
 
-ffjavascript@^0.2.45, ffjavascript@^0.2.48, ffjavascript@^0.2.55:
+ffjavascript@0.2.59, ffjavascript@^0.2.45, ffjavascript@^0.2.48, ffjavascript@^0.2.55:
   version "0.2.59"
   resolved "https://registry.yarnpkg.com/ffjavascript/-/ffjavascript-0.2.59.tgz#b2f836082587fab333dfb181b909a188f80036f3"
   integrity sha512-QssOEUv+wilz9Sg7Zaj6KWAm7QceOAEsFuEBTltUsDo1cjn11rA/LGYvzFBPbzNfxRlZxwgJ7uxpCQcdDlrNfw==
@@ -7571,10 +7571,10 @@ slugify@^1.6.6:
   resolved "https://registry.yarnpkg.com/slugify/-/slugify-1.6.6.tgz#2d4ac0eacb47add6af9e04d3be79319cbcc7924b"
   integrity sha512-h+z7HKHYXj6wJU+AnS/+IH8Uh9fdcX1Lrhg1/VMdf9PwoBQXFcXiAdsy2tSK0P6gKwJLXp02r90ahUCqHk9rrw==
 
-snarkjs@^0.6.8:
-  version "0.6.11"
-  resolved "https://registry.yarnpkg.com/snarkjs/-/snarkjs-0.6.11.tgz#577b0250c0d9bb93c0ee1d4a3d3075956d11775c"
-  integrity sha512-pYDcrSKmUMMJtYxSQTMNG/MtuGvUWPSk9gZzADeIiHp8vJmFdCscMFa/YtemPAkne4v6Awm5HAhqbfNPyoqjug==
+snarkjs@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/snarkjs/-/snarkjs-0.7.0.tgz#9b4d193a0535c1903e45f1508aa7ad74cd130844"
+  integrity sha512-Vu5W+0Va6X1xvlCllpZ2r3/S7MafnL6IrAv09lk/F+VNDHuHEHx3xopR9Kr70p2KpbBBJ/HB9VCDZWism8WGlA==
   dependencies:
     "@iden3/binfileutils" "0.0.11"
     bfj "^7.0.2"
@@ -7582,7 +7582,7 @@ snarkjs@^0.6.8:
     circom_runtime "0.1.22"
     ejs "^3.1.6"
     fastfile "0.0.20"
-    ffjavascript "0.2.57"
+    ffjavascript "0.2.59"
     js-sha3 "^0.8.0"
     logplease "^1.2.15"
     r1csfile "0.0.45"

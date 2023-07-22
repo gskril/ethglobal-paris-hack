@@ -1,24 +1,25 @@
 import {
   SismoConnect,
-  SismoConnectServerConfig,
+  SismoConnectConfig,
   SismoConnectResponse,
 } from '@sismo-core/sismo-connect-server'
 import { SismoConnectVerifiedResult } from '@sismo-core/sismo-connect-react'
 
-const sismoConnectConfig: SismoConnectServerConfig = {
-  appId: process.env.SISMO_APP_ID as string,
-  devMode: {
-    enabled: true,
+const sismoConnectConfig: SismoConnectConfig = {
+  appId: process.env.NEXT_PUBLIC_SISMO_APP_ID as string,
+  vault: {
+    impersonate: ['gregskril.eth'],
   },
 }
 
-const sismoConnect = SismoConnect(sismoConnectConfig)
+const sismoConnect = SismoConnect({ config: sismoConnectConfig })
 export const verifySismoResult = async (
   groupIds: { groupId: string }[],
   response: SismoConnectResponse
 ) => {
+  console.log(response)
+
   return await sismoConnect.verify(response, {
     claims: groupIds,
-    signature: { message: response.signedMessage as string },
   })
 }

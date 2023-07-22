@@ -35,6 +35,7 @@ import { Bubble } from '@/lib/db/interfaces/bubble'
 import { getUserName } from '@/lib/client-db/services/user'
 import { formatAddress } from '@/lib/utils'
 import { User } from '@/lib/db/interfaces/user'
+import { SismoConnect } from '@/components/SismoConnect'
 
 export default function Bubble() {
   const router = useRouter()
@@ -162,6 +163,10 @@ function Content({
                 You don&apos;t have access to this Bubble with your connected
                 address
               </Helper>
+
+              {bubble.privacyType === 'sismo' && (
+                <SismoConnect bubble={bubble} />
+              )}
             </>
           ) : (
             <SiweButton />
