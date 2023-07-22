@@ -16,6 +16,9 @@ const Wrapper = styled.div(
     align-items: center;
     flex-direction: column;
     justify-content: center;
+    max-width: ${theme.space['128']};
+    margin-left: auto;
+    margin-right: auto;
   `
 )
 
@@ -24,17 +27,9 @@ const Title = styled(Heading)`
   font-weight: 850;
 
   ${mq.sm.min(css`
-    font-size: 2.5rem;
+    font-size: 2rem;
   `)}
 `
-
-const Description = styled(Typography)(
-  ({ theme }) => css`
-    line-height: 1.4;
-    color: ${theme.colors.grey};
-    font-size: ${theme.fontSizes.large};
-  `
-)
 
 export default function Home() {
   return (
@@ -46,13 +41,12 @@ export default function Home() {
 
         <Container as="main">
           <Wrapper>
-            <Title>Conversations of Ethereum</Title>
-            <Description>
-              Chat with your favorite{' '}
+            <Title>
+              Voice chats with your favorite{' '}
               <s style={{ color: 'rgb(197, 47, 27)' }}>on-chain</s>{' '}
               <span style={{ color: 'rgb(29, 175, 131)' }}>onchain</span>{' '}
               communities
-            </Description>
+            </Title>
             <SiweButton />
           </Wrapper>
         </Container>
