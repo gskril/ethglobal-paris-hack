@@ -23,11 +23,12 @@ export async function createUser(user: User): Promise<string> {
   return await createFirestoreCollectionDocument(COLLECTION_NAME, user)
 }
 
-export function getUserName(user: User): string {
+export function getUserName(user: User | undefined): string {
+  if (!user) return ''
   return (
-    user.ensLabel ||
-    user.farcasterFName ||
-    user.lensHandle ||
-    formatAddress(user.address)
+    user?.ensLabel ||
+    user?.farcasterFName ||
+    user?.lensHandle ||
+    formatAddress(user?.address)
   )
 }

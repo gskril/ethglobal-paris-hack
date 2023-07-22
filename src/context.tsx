@@ -1,6 +1,7 @@
 import React, { ReactNode, createContext, useEffect, useState } from 'react'
 import { useLocalStorage } from 'usehooks-ts'
 import { Address, useAccount } from 'wagmi'
+import { User } from '@/lib/db/interfaces/user'
 
 type GlobalContextValue = {
   address: Address | undefined
@@ -8,6 +9,8 @@ type GlobalContextValue = {
   setToken: (token: string) => void
   firebaseToken: string | undefined
   setFirebaseToken: (token: string) => void
+  user: User | undefined
+  setUser: (user: User) => void
 }
 
 export const GlobalContext = createContext<GlobalContextValue | undefined>(
@@ -23,6 +26,7 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
     'firebase-token',
     ''
   )
+  const [user, setUser] = useState<User | undefined>(undefined)
 
   useAccount({
     onDisconnect: () => {
@@ -40,6 +44,8 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
         setToken: setToken,
         firebaseToken: firebaseToken,
         setFirebaseToken: setFirebaseToken,
+        user,
+        setUser,
       }}
     >
       {children}

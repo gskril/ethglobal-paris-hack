@@ -19,7 +19,7 @@ export function SiweButton() {
   const { address } = useAccount()
   const isMounted = useIsMounted()
   const { openConnectModal } = useConnectModal()
-  const { token, setToken, firebaseToken, setFirebaseToken } =
+  const { token, setToken, firebaseToken, setFirebaseToken, user, setUser } =
     useGlobalContext()
 
   const messageToSign = useFetch<NonceResponseData>(
@@ -46,8 +46,13 @@ export function SiweButton() {
   )
 
   useEffect(() => {
+    const fetchCurrentUserData = async (firebaseToken: string) => {
+      const user = await loginWithToken(firebaseToken!)
+      console.log(user)
+      setUser(user!)
+    }
     if (sendSignature?.data?.token && sendSignature?.data?.firebaseToken) {
-      loginWithToken(sendSignature?.data?.firebaseToken)
+      fetchCurrentUserData(sendSignature?.data?.firebaseToken!)
       setToken(sendSignature?.data?.token)
       setFirebaseToken(sendSignature?.data?.firebaseToken)
     }
@@ -56,6 +61,7 @@ export function SiweButton() {
     sendSignature?.data?.token,
     setFirebaseToken,
     setToken,
+    setUser,
   ])
 
   return (

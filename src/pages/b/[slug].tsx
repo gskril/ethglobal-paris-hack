@@ -27,6 +27,9 @@ import { useIsMounted } from '@/hooks/useIsMounted'
 import { useBubbleBySlug } from '@/hooks/useBubble'
 import { BubbleAccessResponseData } from '@/pages/api/bubbles/[id]/access'
 import { Bubble } from '@/lib/db/interfaces/bubble'
+import { getUserName } from '@/lib/client-db/services/user'
+import { formatAddress } from '@/lib/utils'
+import { Address } from 'viem'
 
 export default function Bubble() {
   const router = useRouter()
@@ -73,7 +76,7 @@ const HeadingWrapper = styled.div(
 )
 
 function Content({ bubble }: { bubble: Bubble | null }) {
-  const { address, token } = useGlobalContext()
+  const { address, token, user } = useGlobalContext()
 
   const auth = useFetch<BubbleAccessResponseData>(
     bubble ? `/api/bubbles/${bubble.id}/access` : undefined,
@@ -145,7 +148,22 @@ function Content({ bubble }: { bubble: Bubble | null }) {
               Leave
             </Button>
           ) : (
-            <Button size="small" onClick={() => daily?.join()}>
+            <Button
+              size="small"
+              onClick={() =>
+                daily?.join({
+                  token: auth.data?.accessToken,
+                  userName: getUserName(user) || formatAddress(address!),
+                  userData: {
+                    avatarUrl: user?.avatarUrl,
+                    ensLabel: user?.ensLabel,
+                    address: user?.address,
+                    farcasterFName: user?.farcasterFName,
+                    lensHandle: user?.lensHandle,
+                  },
+                })
+              }
+            >
               Join
             </Button>
           )}
