@@ -7,7 +7,7 @@ interface JwtPayload {
   user_name: string // User name
   user_id: string
 }
-export const generateDailyJWT = async (
+export const generateDailyJWT = (
   roomName: string,
   userId: string,
   userName: string

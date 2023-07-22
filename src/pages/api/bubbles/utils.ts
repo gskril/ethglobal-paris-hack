@@ -9,6 +9,7 @@ export const checkBubbleAccess = async (
   user: User,
   sismoResponse?: SismoConnectResponse
 ) => {
+  console.log(bubble.privacyType)
   switch (bubble.privacyType) {
     case BubblePrivacyType.OPEN:
       return true

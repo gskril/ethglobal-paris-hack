@@ -72,13 +72,12 @@ class BubbleAccessHandler {
     if (!canAccessBubble) {
       throw new UnauthorizedException("You don't have access to this bubble")
     }
-    return {
-      accessToken: generateDailyJWT(
-        bubble.slug,
-        user.id as string,
-        getUserName(user)
-      ),
-    }
+    const jwt = generateDailyJWT(
+      bubble.slug,
+      user.id as string,
+      getUserName(user)
+    )
+    return { accessToken: jwt }
   }
 }
 
