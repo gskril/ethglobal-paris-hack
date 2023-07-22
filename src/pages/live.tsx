@@ -54,9 +54,9 @@ export default function Live() {
 function getNumberOfListeners(
   roomName: string,
   apiResponse: GetStatesResponseData | undefined
-): number {
+) {
   if (!apiResponse) {
-    return 0
+    return undefined
   }
 
   const roomDataArray = apiResponse[roomName]

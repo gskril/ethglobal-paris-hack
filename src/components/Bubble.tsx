@@ -1,7 +1,6 @@
-import { Typography } from '@ensdomains/thorin'
+import { Spinner, Typography } from '@ensdomains/thorin'
 import Link from 'next/link'
 import styled, { css } from 'styled-components'
-import { useParticipantCounts } from '@daily-co/daily-react'
 
 import { Card } from '@/components/atoms'
 import { Bubble as BubbleType } from '@/lib/db/interfaces/bubble'
@@ -41,7 +40,7 @@ const Listener = styled.img(
 )
 
 type BubbleProps = BubbleType & {
-  listenersCount: number
+  listenersCount: number | undefined
 }
 
 export const Bubble = ({
@@ -57,7 +56,13 @@ export const Bubble = ({
 
         <Title asProp="span">{name}</Title>
 
-        <p>{listenersCount} listeners</p>
+        {listenersCount !== undefined ? (
+          <p>
+            {listenersCount} listener{listenersCount !== 1 && 's'}
+          </p>
+        ) : (
+          <Spinner />
+        )}
 
         {/* TODO: add preview of listeners */}
         <Listeners people={[]} />
