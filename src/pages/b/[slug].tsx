@@ -1,6 +1,6 @@
 import { Button, Heading, Helper, Spinner } from '@ensdomains/thorin'
 import { useRouter } from 'next/router'
-import { Toaster } from 'react-hot-toast'
+import { Toaster, toast } from 'react-hot-toast'
 import {
   DailyProvider,
   useDaily,
@@ -74,6 +74,7 @@ const HeadingWrapper = styled.div(
 )
 
 function Content({ bubble }: { bubble: Bubble | null }) {
+  const router = useRouter()
   const { address, token, user } = useGlobalContext()
 
   const auth = useFetch<BubbleAccessResponseData>(
@@ -187,6 +188,28 @@ function Content({ bubble }: { bubble: Bubble | null }) {
               }}
             >
               Mute
+            </Button>
+          )}
+
+          {meetingState === 'joined-meeting' && bubble?.userId === user?.id && (
+            <Button
+              size="small"
+              colorStyle="redPrimary"
+              onClick={async () => {
+                const res = await fetch(`/api/bubbles/${bubble.id}`, {
+                  method: 'DELETE',
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                })
+
+                if (res.ok) {
+                  toast.success('Bubble ended for everyone')
+                  router.push('/live')
+                }
+              }}
+            >
+              End for Everyone
             </Button>
           )}
         </div>
