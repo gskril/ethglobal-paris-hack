@@ -1,7 +1,8 @@
-import { Tag, Card as ThorinCard, Typography } from '@ensdomains/thorin'
+import { Tag, Typography } from '@ensdomains/thorin'
 import Link from 'next/link'
 import styled, { css } from 'styled-components'
 
+import { Card } from '@/components/atoms'
 import { Bubble as BubbleType } from '@/types'
 
 export const BubbleGrid = styled.div(
@@ -9,16 +10,6 @@ export const BubbleGrid = styled.div(
     display: grid;
     gap: ${theme.space['4']};
     grid-template-columns: repeat(auto-fill, minmax(18rem, 4fr));
-  `
-)
-
-const Card = styled(ThorinCard)(
-  ({ theme }) => css`
-    padding: ${theme.space['4']};
-    display: flex;
-    flex-direction: column;
-    gap: ${theme.space['2']};
-    width: 100%;
   `
 )
 
