@@ -7,18 +7,3 @@ export type Gate =
   | 'lens'
   | 'poap'
   | 'open'
-
-export type User = {
-  address: string
-  name: string
-  avatar: string
-  farcaster: string
-  lens: string
-}
-
-export type Bubble = {
-  title: string
-  slug: string
-  gate: Gate
-  people: User[]
-}

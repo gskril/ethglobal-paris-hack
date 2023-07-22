@@ -6,42 +6,13 @@ import { Footer } from '@/components/Footer'
 import { Meta } from '@/components/Meta'
 import { Nav } from '@/components/Nav'
 import { Container, Layout } from '@/components/atoms'
-import { Bubble as BubbleType } from '@/types'
+import { useBubbles } from '@/hooks/useBubbles'
+import { useGlobalContext } from '@/hooks/useGlobalContext'
 
 export default function Live() {
-  const bubbles: BubbleType[] = [
-    {
-      title: 'Farcaster Dev Call',
-      slug: 'test',
-      gate: 'Farcaster',
-      people: [
-        {
-          address: '',
-          name: 'gregskril.eth',
-          avatar:
-            'https://pbs.twimg.com/profile_images/1134494299104731136/NQ0AB5DD_400x400.jpg',
-          farcaster: '',
-          lens: '',
-        },
-        {
-          address: '',
-          name: 'limone.eth',
-          avatar:
-            'https://pbs.twimg.com/profile_images/1609844701741420544/BsgkaetB_400x400.jpg',
-          farcaster: '',
-          lens: '',
-        },
-        {
-          address: '',
-          name: 'dwr.eth',
-          avatar:
-            'https://pbs.twimg.com/profile_images/1518670972559130624/-G9gNsOp_400x400.png',
-          farcaster: '',
-          lens: '',
-        },
-      ],
-    },
-  ]
+  const { firebaseToken } = useGlobalContext()
+  const bubbles = useBubbles()
+  console.log(bubbles)
 
   return (
     <>
@@ -53,11 +24,13 @@ export default function Live() {
         <Container as="main">
           <Heading style={{ marginBottom: '1rem' }}>Live Right Now</Heading>
 
-          <BubbleGrid>
-            {bubbles.map((bubble) => (
-              <Bubble key={bubble.slug} {...bubble} />
-            ))}
-          </BubbleGrid>
+          {bubbles && (
+            <BubbleGrid>
+              {bubbles.map((bubble) => (
+                <Bubble key={bubble.slug} {...bubble} />
+              ))}
+            </BubbleGrid>
+          )}
         </Container>
 
         <Footer />

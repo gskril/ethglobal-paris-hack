@@ -3,7 +3,8 @@ import Link from 'next/link'
 import styled, { css } from 'styled-components'
 
 import { Card } from '@/components/atoms'
-import { Bubble as BubbleType, User } from '@/types'
+import { Bubble as BubbleType } from '@/lib/db/interfaces/bubble'
+import { User } from '@/lib/db/interfaces/user'
 
 import { GateTag } from './GateTag'
 
@@ -40,15 +41,16 @@ const Listener = styled.img(
 
 type BubbleProps = BubbleType
 
-export const Bubble = ({ title, slug, gate, people }: BubbleProps) => {
+export const Bubble = ({ name, slug, privacyType }: BubbleProps) => {
   return (
     <Link href={`/b/${slug}`}>
       <Card>
-        <GateTag gate={gate} />
+        <GateTag gate={privacyType} />
 
-        <Title asProp="span">{title}</Title>
+        <Title asProp="span">{name}</Title>
 
-        <Listeners people={people} />
+        {/* TODO: add preview of listeners */}
+        <Listeners people={[]} />
       </Card>
     </Link>
   )
@@ -58,7 +60,11 @@ export const Listeners = ({ people }: { people: User[] }) => (
   <div style={{ display: 'flex' }}>
     {people.map((person) => (
       // eslint-disable-next-line @next/next/no-img-element
-      <Listener key={person.name} src={person.avatar} alt={person.name} />
+      <Listener
+        key={person.ensLabel || person.farcasterFName}
+        src={person.avatarUrl}
+        alt=""
+      />
     ))}
   </div>
 )

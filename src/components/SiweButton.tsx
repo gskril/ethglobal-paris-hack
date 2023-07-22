@@ -9,6 +9,7 @@ import { useFetch } from 'usehooks-ts'
 import { NonceResponseData } from '@/pages/api/auth/nonce'
 import { SignInRequestData, SignInResponseData } from '@/pages/api/auth/sign-in'
 import { useEffect } from 'react'
+import { loginWithToken } from '@/lib/client-db/utils'
 
 const StyledButton = styled(Button)`
   width: fit-content;
@@ -46,6 +47,7 @@ export function SiweButton() {
 
   useEffect(() => {
     if (sendSignature?.data?.token && sendSignature?.data?.firebaseToken) {
+      loginWithToken(sendSignature?.data?.firebaseToken)
       setToken(sendSignature?.data?.token)
       setFirebaseToken(sendSignature?.data?.firebaseToken)
     }
