@@ -1,4 +1,5 @@
 import { User } from '@/lib/db/interfaces/user'
+import { DailyParticipant } from '@daily-co/daily-js'
 import { Typography } from '@ensdomains/thorin'
 import styled, { css } from 'styled-components'
 
@@ -47,13 +48,14 @@ const Image = styled.img(
   `
 )
 
-export function Participant({ person }: { person: User }) {
+export function Participant({ person }: { person: DailyParticipant }) {
+  const userData = person.userData as User
+
   return (
     <ParticipantWrapper>
-      <Image src={person.avatarUrl} alt="" />
-      <Typography asProp="span">
-        {person.ensLabel || person.farcasterFName}
-      </Typography>
+      {/* <Image src={person.avatarUrl} alt="" /> */}
+      {/* <Typography asProp="span">{person.ensLabel || person.farcasterFName}</Typography> */}
+      <Typography>{person.user_name || person.user_id}</Typography>
     </ParticipantWrapper>
   )
 }

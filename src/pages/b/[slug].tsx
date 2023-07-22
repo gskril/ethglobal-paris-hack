@@ -5,10 +5,8 @@ import {
   DailyProvider,
   useDaily,
   useParticipantCounts,
-  useRoom,
   useMeetingState,
   DailyAudio,
-  useInputSettings,
 } from '@daily-co/daily-react'
 import { useFetch } from 'usehooks-ts'
 import { useState } from 'react'
@@ -90,12 +88,13 @@ function Content({ bubble }: { bubble: Bubble | null }) {
 
   const [isMuted, setIsMuted] = useState(true)
 
-  // const room = useRoom()
   const daily = useDaily()
   const meetingState = useMeetingState()
-  const { present, hidden } = useParticipantCounts()
+  const { present } = useParticipantCounts()
+  const _participants = daily?.participants()
+  const participants = Object.values(_participants || {})
 
-  console.log('Active users', present + hidden)
+  console.log('Active listeners', present)
 
   if (!meetingState || !bubble || (!auth.data && !auth.error)) {
     return <Spinner color="bluePrimary" size="medium" />
@@ -195,9 +194,9 @@ function Content({ bubble }: { bubble: Bubble | null }) {
 
       <Card $gap="medium">
         <ParticipantGrid>
-          {/* {bubble.people.map((person) => (
-            <Participant key={person.name} person={person} />
-          ))} */}
+          {participants.map((person) => (
+            <Participant key={person.user_id} person={person} />
+          ))}
         </ParticipantGrid>
       </Card>
 

@@ -7,8 +7,6 @@ import { Meta } from '@/components/Meta'
 import { Nav } from '@/components/Nav'
 import { Container, Layout } from '@/components/atoms'
 import { useBubbles } from '@/hooks/useBubbles'
-import { useGlobalContext } from '@/hooks/useGlobalContext'
-import { DailyProvider } from '@daily-co/daily-react'
 import { useFetch } from 'usehooks-ts'
 import { GetStatesResponseData } from './api/bubbles/stats'
 
