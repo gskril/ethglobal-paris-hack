@@ -64,6 +64,10 @@ class BubbleAccessHandler {
       throw new NotFoundException('Bubble not found')
     }
 
+    if (bubble.userId === user.id) {
+      return generateDailyJWT(bubble.slug, user.id as string, getUserName(user))
+    }
+
     const canAccessBubble = await checkBubbleAccess(
       bubble,
       req.user!,
