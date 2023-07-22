@@ -1,6 +1,15 @@
-import { Heading, Helper, Spinner, Typography } from '@ensdomains/thorin'
+import { Button, Heading, Helper, Spinner } from '@ensdomains/thorin'
 import { useRouter } from 'next/router'
 import { Toaster } from 'react-hot-toast'
+import {
+  DailyProvider,
+  useDaily,
+  useParticipantCounts,
+  useRoom,
+  useMeetingState,
+  DailyAudio,
+} from '@daily-co/daily-react'
+import { useFetch } from 'usehooks-ts'
 
 import { Footer } from '@/components/Footer'
 import { GateTag } from '@/components/GateTag'
@@ -13,36 +22,41 @@ import { useGlobalContext } from '@/hooks/useGlobalContext'
 import { SiweButton } from '@/components/SiweButton'
 import { useIsMounted } from '@/hooks/useIsMounted'
 import { useBubbleBySlug } from '@/hooks/useBubble'
-import { useFetch } from 'usehooks-ts'
-import { BubbleAccessResponseData } from '../api/bubbles/[id]/access'
+import { BubbleAccessResponseData } from '@/pages/api/bubbles/[id]/access'
+import { Bubble } from '@/lib/db/interfaces/bubble'
+import { useEffect } from 'react'
 
 export default function Bubble() {
+  const router = useRouter()
+  const { slug } = router.query
+  const bubble = useBubbleBySlug(slug as string)
+
   return (
-    <>
+    <DailyProvider
+      url={`https://ethglobal-hq.daily.co/${bubble?.slug}`}
+      videoSource={false}
+    >
       <Meta />
 
       <Layout $verticalCenter={false}>
         <Nav />
 
         <Container as="main">
-          <Content />
+          <Content bubble={bubble} />
         </Container>
 
         <Footer />
       </Layout>
 
       <Toaster position="bottom-center" />
-    </>
+    </DailyProvider>
   )
 }
 
-function Content() {
-  const router = useRouter()
-  const { slug } = router.query
+function Content({ bubble }: { bubble: Bubble | null }) {
   const { address, token } = useGlobalContext()
   const isMounted = useIsMounted()
 
-  const bubble = useBubbleBySlug(slug as string)
   const auth = useFetch<BubbleAccessResponseData>(
     bubble ? `/api/bubbles/${bubble.id}/access` : undefined,
     {
@@ -52,6 +66,13 @@ function Content() {
       },
     }
   )
+
+  const room = useRoom()
+  const daily = useDaily()
+  const meetingState = useMeetingState()
+  const { present, hidden } = useParticipantCounts()
+
+  console.log(present, hidden, meetingState)
 
   if (!isMounted || !bubble || (!auth.data && !auth.error)) {
     return <Spinner color="bluePrimary" size="medium" />
@@ -95,6 +116,8 @@ function Content() {
     <>
       <Heading style={{ marginBottom: '1rem' }}>{bubble.name}</Heading>
 
+      <Button onClick={() => daily?.join()}>Join</Button>
+
       <Card $gap="medium">
         <ParticipantGrid>
           {/* {bubble.people.map((person) => (
@@ -102,6 +125,8 @@ function Content() {
           ))} */}
         </ParticipantGrid>
       </Card>
+
+      <DailyAudio />
     </>
   )
 }
