@@ -21,6 +21,21 @@ export interface AirstackPOAPResponseType {
 
 export interface AirstackPOAP {
   eventId: string
+  poapEvent: {
+    eventName: 'DevCon2'
+    eventURL: 'https://devcon.ethereum.org/'
+    startDate: '2016-09-19T00:00:00Z'
+    endDate: '2016-09-21T00:00:00Z'
+    metadata: {
+      description: string
+      external_url: string
+      home_url: string
+      image_url: string
+      name: string
+      tags: string[]
+      year: number
+    }
+  }
   owner: {
     identity: string
     addresses: string[]
@@ -43,6 +58,20 @@ export interface AirstackERC721Token {
     name: string
     symbol: string
   }
+  contractMetadata: {
+    image: string
+    description: string
+    externalLink: string
+    name: string
+  }
+  projectDetails: {
+    collectionName: string
+    description: string
+    discordUrl: string
+    externalUrl: string
+    imageUrl: string
+    twitterUrl: string
+  }
 }
 
 export interface AirstackERC20TokenResponseType {
@@ -62,5 +91,13 @@ export interface AirstackERC20Token {
   token: {
     name: string
     symbol: string
+  }
+  projectDetails: {
+    collectionName: string
+    externalUrl: string
+    discordUrl: string
+    description: string
+    imageUrl: string
+    twitterUrl: string
   }
 }

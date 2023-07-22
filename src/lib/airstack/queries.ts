@@ -30,6 +30,13 @@ export const POAPQuery = gql`
     ) {
       Poap {
         eventId
+        poapEvent {
+          eventName
+          eventURL
+          startDate
+          endDate
+          metadata
+        }
         owner {
           identity
           addresses
@@ -62,6 +69,20 @@ export const getERC721TokenQuery = gql`
         token {
           name
           symbol
+        }
+        contractMetaData {
+          image
+          description
+          externalLink
+          name
+        }
+        projectDetails {
+          collectionName
+          description
+          discordUrl
+          externalUrl
+          imageUrl
+          twitterUrl
         }
         tokenNfts {
           tokenId
@@ -107,6 +128,14 @@ export const getERC20TokenQuery = gql`
         token {
           name
           symbol
+        }
+        projectDetails {
+          collectionName
+          description
+          discordUrl
+          externalUrl
+          imageUrl
+          twitterUrl
         }
       }
     }
