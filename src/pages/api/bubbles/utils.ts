@@ -49,7 +49,7 @@ const ERC20Handler = async (
   )
   if (erc20tokens?.length === 0) return false
   const token = erc20tokens[0]
-  return parseFloat(token.amount) >= amount
+  return token.formattedAmount >= amount
 }
 
 const ERC721Handler = async (
@@ -57,11 +57,11 @@ const ERC721Handler = async (
   walletAddress: string
 ): Promise<boolean> => {
   const airStack = new AirstackHelper()
-  const erc20tokens = await airStack.getERC721BalanceOfWallet(
+  const erc721tokens = await airStack.getERC721BalanceOfWallet(
     contractAddress,
     walletAddress
   )
-  return erc20tokens?.length >= 0
+  return erc721tokens?.length >= 0
 }
 
 const ERC1155Handler = async (
