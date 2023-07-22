@@ -20,16 +20,39 @@ const Title = styled(Typography)(
   `
 )
 
+const Listener = styled.img(
+  ({ theme }) => css`
+    width: ${theme.space['8']};
+    height: ${theme.space['8']};
+    object-fit: cover;
+    border-radius: ${theme.radii.full};
+    margin-right: -${theme.space['2']};
+    box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.05);
+
+    &:last-child {
+      margin-right: 0;
+    }
+  `
+)
+
 type BubbleProps = BubbleType
 
 export const Bubble = ({ title, slug, gate, people }: BubbleProps) => {
   return (
     <Link href={`/b/${slug}`}>
       <Card>
-        <Tag tone="accent">{gate}</Tag>
+        <Tag tone={gate === 'Open' ? 'green' : 'accent'}>{gate}</Tag>
+
         <Title as="span" size="base">
           {title}
         </Title>
+
+        <div style={{ display: 'flex' }}>
+          {people.map((person) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <Listener key={person.name} src={person.avatar} alt={person.name} />
+          ))}
+        </div>
       </Card>
     </Link>
   )
