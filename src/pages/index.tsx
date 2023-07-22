@@ -46,7 +46,13 @@ export default function Home() {
 
         <Container as="main">
           <Wrapper>
-            <Title>Audio Chats for Ethereum</Title>
+            <Title>Conversations of Ethereum</Title>
+            <Description>
+              Chat with your favorite{' '}
+              <s style={{ color: 'rgb(197, 47, 27)' }}>on-chain</s>{' '}
+              <span style={{ color: 'rgb(29, 175, 131)' }}>onchain</span>{' '}
+              communities
+            </Description>
             <SiweButton />
           </Wrapper>
         </Container>
