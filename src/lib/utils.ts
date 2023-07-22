@@ -4,3 +4,10 @@ export const cleanObject = (obj: Record<string, any>) => {
   )
   return obj
 }
+
+export function formatAddress(address: string, shortened = false): string {
+  if (shortened) {
+    return address.slice(0, 5)
+  }
+  return `${address.slice(0, 4)}…${address.slice(-4)}`
+}
