@@ -49,7 +49,6 @@ export default function Home() {
   const { address } = useAccount()
   const isMounted = useIsMounted()
   const messageToSign = useFetch<NonceResponseData>('/api/auth/nonce')
-  console.log({ messageToSign })
 
   const signature = useSignMessage({
     message: messageToSign?.data?.message,
@@ -71,8 +70,6 @@ export default function Home() {
       },
     }
   )
-
-  console.log({ signature, sendSignature })
 
   return (
     <>
