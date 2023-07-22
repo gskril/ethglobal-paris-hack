@@ -259,11 +259,15 @@ function Content({
 
       <CardCols $active={!!bubble.farcasterCastHash}>
         <Card $gap="medium">
-          <ParticipantGrid>
-            {participants.map((person) => (
-              <Participant key={person.user_id} person={person} />
-            ))}
-          </ParticipantGrid>
+          {participants.length > 0 ? (
+            <ParticipantGrid>
+              {participants.map((person) => (
+                <Participant key={person.user_id} person={person} />
+              ))}
+            </ParticipantGrid>
+          ) : (
+            <Helper>There&apos;s nobody here yet :/</Helper>
+          )}
         </Card>
 
         {bubble.farcasterCastHash && (
