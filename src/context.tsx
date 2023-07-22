@@ -1,9 +1,9 @@
 import React, { ReactNode, createContext, useEffect, useState } from 'react'
 import { useLocalStorage } from 'usehooks-ts'
-import { useAccount } from 'wagmi'
+import { Address, useAccount } from 'wagmi'
 
 type GlobalContextValue = {
-  address: string | undefined
+  address: Address | undefined
   token: string | undefined
   setToken: (token: string) => void
 }
@@ -20,7 +20,8 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
 
   useAccount({
     onDisconnect: () => {
-      setStoredToken('')
+      // remove token from localStorage
+      window.localStorage.removeItem('firebase-token')
     },
   })
 

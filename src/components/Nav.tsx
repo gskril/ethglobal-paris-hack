@@ -6,6 +6,7 @@ import styled, { css } from 'styled-components'
 import { useAccount, useDisconnect, useEnsAvatar, useEnsName } from 'wagmi'
 
 import { useIsMounted } from '@/hooks/useIsMounted'
+import { useGlobalContext } from '@/hooks/useGlobalContext'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -70,8 +71,14 @@ const ProfileMobile = styled(Profile)`
   `)}
 `
 
+const HideMobile = styled.div`
+  ${mq.sm.max(css`
+    display: none;
+  `)}
+`
+
 export function Nav() {
-  const { address } = useAccount()
+  const { address, token } = useGlobalContext()
   const { data: ensName } = useEnsName({ address: address })
   const { data: ensAvatar } = useEnsAvatar({ name: ensName })
 
@@ -86,7 +93,15 @@ export function Nav() {
       <Name href="/">Bubbles</Name>
 
       {address && isMounted ? (
-        <>
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <HideMobile>
+            {token && (
+              <Button as="a" shape="rounded" href="/create">
+                Create Bubble
+              </Button>
+            )}
+          </HideMobile>
+
           <ProfileMedium
             address={address}
             ensName={ensName || undefined}
@@ -114,9 +129,9 @@ export function Nav() {
             avatar={ensAvatar ? ensAvatar : undefined}
             onClick={openAccountModal}
           />
-        </>
+        </div>
       ) : (
-        <StyledButton shape="circle" onClick={openConnectModal}>
+        <StyledButton shape="rounded" onClick={openConnectModal}>
           Connect
         </StyledButton>
       )}
