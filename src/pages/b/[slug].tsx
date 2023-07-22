@@ -10,6 +10,9 @@ import { Card, Container, Layout } from '@/components/atoms'
 import { Bubble } from '@/types'
 import { Listeners } from '@/components/Bubble'
 import { Participant, ParticipantGrid } from '@/components/Participant'
+import { useGlobalContext } from '@/hooks/useGlobalContext'
+import { SiweButton } from '@/components/SiweButton'
+import { useIsMounted } from '@/hooks/useIsMounted'
 
 export default function Bubble() {
   return (
@@ -34,8 +37,11 @@ export default function Bubble() {
 function Content() {
   const router = useRouter()
   const { slug } = router.query
+  const { address, token } = useGlobalContext()
+  const isMounted = useIsMounted()
+
   const isLoading = false
-  const isAuthed = true
+  const isAuthed = false
 
   const bubble: Bubble = {
     title: 'Farcaster Dev Call',
@@ -69,7 +75,7 @@ function Content() {
     ],
   }
 
-  if (isLoading) {
+  if (isLoading || !isMounted) {
     return <Spinner color="bluePrimary" size="medium" />
   }
 
@@ -79,6 +85,7 @@ function Content() {
         <Heading style={{ marginBottom: '1rem' }}>{bubble.title}</Heading>
 
         <Card
+          $gap="medium"
           style={{
             alignItems: 'center',
             paddingTop: '4rem',
@@ -89,11 +96,18 @@ function Content() {
             <GateTag gate={bubble.gate} />
             <Listeners people={bubble.people} />
           </div>
-          <Heading>Unauthorized</Heading>
-          <Helper>
-            You don&apos;t have access to this Bubble with your connected
-            address
-          </Helper>
+
+          {address && token ? (
+            <>
+              <Heading>Unauthorized</Heading>
+              <Helper>
+                You don&apos;t have access to this Bubble with your connected
+                address
+              </Helper>
+            </>
+          ) : (
+            <SiweButton />
+          )}
         </Card>
       </>
     )
@@ -103,7 +117,7 @@ function Content() {
     <>
       <Heading style={{ marginBottom: '1rem' }}>{bubble.title}</Heading>
 
-      <Card>
+      <Card $gap="medium">
         <ParticipantGrid>
           {bubble.people.map((person) => (
             <Participant key={person.name} person={person} />
