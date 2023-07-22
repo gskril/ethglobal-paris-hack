@@ -73,7 +73,13 @@ const ProfileMobile = styled(Profile)`
 `
 
 export function Nav() {
-  const { address } = useAccount()
+  const [storedToken, setStoredToken] = useLocalStorage('firebase-token', '')
+
+  const { address } = useAccount({
+    onDisconnect: () => {
+      setStoredToken('')
+    },
+  })
   const { data: ensName } = useEnsName({ address: address })
   const { data: ensAvatar } = useEnsAvatar({ name: ensName })
 
@@ -82,8 +88,6 @@ export function Nav() {
 
   const { disconnect } = useDisconnect()
   const isMounted = useIsMounted()
-
-  // TODO: clear firebase token from local storage on disconnect
 
   return (
     <Wrapper>
