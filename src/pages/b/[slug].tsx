@@ -177,7 +177,8 @@ function Content({
         <div>
           <Heading>{bubble.name}</Heading>
           <Typography>
-            Creator: {getUserName(bubbleCreator || undefined)}
+            Creator: {getUserName(bubbleCreator || undefined)}. {present}{' '}
+            Listeners
           </Typography>
         </div>
 
