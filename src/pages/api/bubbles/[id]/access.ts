@@ -73,7 +73,11 @@ class BubbleAccessHandler {
       throw new UnauthorizedException("You don't have access to this bubble")
     }
     return {
-      accessToken: generateDailyJWT(bubble.slug, getUserName(user)),
+      accessToken: generateDailyJWT(
+        bubble.slug,
+        user.id as string,
+        getUserName(user)
+      ),
     }
   }
 }
