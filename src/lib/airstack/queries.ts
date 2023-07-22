@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export const getWeb3SocialsQuery = gql`
-  query GetAllSocials($address: String!) {
+  query GetAllSocials($address: Address!) {
     Socials(
       input: {
         filter: { userAssociatedAddresses: { _eq: $address } }

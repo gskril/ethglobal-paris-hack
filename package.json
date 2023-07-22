@@ -21,6 +21,7 @@
     "ethers": "^6.6.4",
     "firebase": "^10.1.0",
     "firebase-admin": "^11.10.1",
+    "graphql": "^16.7.1",
     "next": "13.4.1",
     "next-api-decorators": "^2.0.2",
     "next-plausible": "^3.7.2",
