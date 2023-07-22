@@ -36,13 +36,18 @@ export const Container = styled.div(
   `
 )
 
-export const Card = styled(ThorinCard)(
-  ({ theme }) => css`
+export const Card = styled(ThorinCard)<{ $gap?: 'small' | 'medium' }>(
+  ({ theme, $gap }) => css`
     padding: ${theme.space['4']};
     display: flex;
     flex-direction: column;
     gap: ${theme.space['2']};
     width: 100%;
     border-radius: ${theme.radii.extraLarge};
+
+    ${$gap === 'medium' &&
+    css`
+      gap: ${theme.space['4']};
+    `}
   `
 )

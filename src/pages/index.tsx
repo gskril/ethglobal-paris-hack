@@ -1,18 +1,12 @@
-import { Button, EthSVG, Heading, Typography, mq } from '@ensdomains/thorin'
-import { useEffect } from 'react'
+import { Heading, Typography, mq } from '@ensdomains/thorin'
 import { Toaster } from 'react-hot-toast'
 import styled, { css } from 'styled-components'
-import { useFetch, useLocalStorage } from 'usehooks-ts'
-import { useAccount, useSignMessage } from 'wagmi'
 
 import { Footer } from '@/components/Footer'
 import { Meta } from '@/components/Meta'
 import { Nav } from '@/components/Nav'
 import { Container, Layout } from '@/components/atoms'
-import { useIsMounted } from '@/hooks/useIsMounted'
-
-import { NonceResponseData } from './api/auth/nonce'
-import { SignInRequestData, SignInResponseData } from './api/auth/sign-in'
+import { SiweButton } from '@/components/SiweButton'
 
 const Wrapper = styled.div(
   ({ theme }) => css`
@@ -42,47 +36,7 @@ const Description = styled(Typography)(
   `
 )
 
-const StyledButton = styled(Button)`
-  width: fit-content;
-`
-
 export default function Home() {
-  const { address } = useAccount()
-  const isMounted = useIsMounted()
-  const messageToSign = useFetch<NonceResponseData>('/api/auth/nonce')
-
-  const signature = useSignMessage({
-    message: messageToSign?.data?.message,
-  })
-
-  const sendSignatureBody: Partial<SignInRequestData> = {
-    address: address,
-    signature: signature?.data,
-    nonce: messageToSign?.data?.nonce,
-  }
-
-  const sendSignature = useFetch<SignInResponseData>(
-    signature.data ? '/api/auth/sign-in' : undefined,
-    {
-      method: 'POST',
-      body: JSON.stringify(sendSignatureBody),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-  )
-
-  const [storedToken, setStoredToken] = useLocalStorage(
-    'firebase-token',
-    sendSignature?.data?.token
-  )
-
-  useEffect(() => {
-    if (sendSignature?.data?.token) {
-      setStoredToken(sendSignature?.data?.token)
-    }
-  }, [sendSignature?.data?.token, setStoredToken])
-
   return (
     <>
       <Meta />
@@ -93,13 +47,7 @@ export default function Home() {
         <Container as="main">
           <Wrapper>
             <Title>Audio Chats for Ethereum</Title>
-            <StyledButton
-              prefix={<EthSVG />}
-              disabled={!address || !isMounted}
-              onClick={() => signature.signMessage?.()}
-            >
-              Sign-In with Ethereum
-            </StyledButton>
+            <SiweButton />
           </Wrapper>
         </Container>
 

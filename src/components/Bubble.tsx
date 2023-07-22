@@ -1,9 +1,11 @@
-import { Tag, Typography } from '@ensdomains/thorin'
+import { Typography } from '@ensdomains/thorin'
 import Link from 'next/link'
 import styled, { css } from 'styled-components'
 
 import { Card } from '@/components/atoms'
-import { Bubble as BubbleType } from '@/types'
+import { Bubble as BubbleType, User } from '@/types'
+
+import { GateTag } from './GateTag'
 
 export const BubbleGrid = styled.div(
   ({ theme }) => css`
@@ -15,7 +17,8 @@ export const BubbleGrid = styled.div(
 
 const Title = styled(Typography)(
   ({ theme }) => css`
-    font-size: ${theme.fontSizes.extraLarge};
+    font-size: ${theme.fontSizes.headingFour};
+    line-height: 1.2;
     font-weight: ${theme.fontWeights.bold};
   `
 )
@@ -41,19 +44,21 @@ export const Bubble = ({ title, slug, gate, people }: BubbleProps) => {
   return (
     <Link href={`/b/${slug}`}>
       <Card>
-        <Tag tone={gate === 'Open' ? 'green' : 'accent'}>{gate}</Tag>
+        <GateTag gate={gate} />
 
-        <Title as="span" size="base">
-          {title}
-        </Title>
+        <Title asProp="span">{title}</Title>
 
-        <div style={{ display: 'flex' }}>
-          {people.map((person) => (
-            // eslint-disable-next-line @next/next/no-img-element
-            <Listener key={person.name} src={person.avatar} alt={person.name} />
-          ))}
-        </div>
+        <Listeners people={people} />
       </Card>
     </Link>
   )
 }
+
+export const Listeners = ({ people }: { people: User[] }) => (
+  <div style={{ display: 'flex' }}>
+    {people.map((person) => (
+      // eslint-disable-next-line @next/next/no-img-element
+      <Listener key={person.name} src={person.avatar} alt={person.name} />
+    ))}
+  </div>
+)
