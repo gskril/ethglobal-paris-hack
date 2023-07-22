@@ -1,10 +1,9 @@
-import { auth } from '@/lib/db/firebase-admin'
 import {
   createFirestoreCollectionDocument,
   getFirestoreCollectionDocumentById,
   getFirstFirestoreCollectionDocumentByWhereConditions,
   getWhereConditionObject,
-} from '@/lib/db/firestore'
+} from '@/lib/client-db/firestore'
 import { User } from '@/lib/db/interfaces/user'
 import { formatAddress } from '@/lib/utils'
 

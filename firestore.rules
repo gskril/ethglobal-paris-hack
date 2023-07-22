@@ -7,5 +7,9 @@ service cloud.firestore {
         allow read: if true;
         allow write: if false;
     }
+    match /users/{document} {
+        allow read: if true;
+        allow write: if false;
+    }
   }
 }
