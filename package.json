@@ -16,6 +16,7 @@
     "@ensdomains/thorin": "^0.6.20",
     "@metamask/eth-sig-util": "^6.0.0",
     "@rainbow-me/rainbowkit": "^1.0.4",
+    "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "ethers": "^6.6.4",
     "firebase": "^10.1.0",

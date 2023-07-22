@@ -11,7 +11,7 @@ import { useFetch } from '@/hooks/useFetch'
 import { useIsMounted } from '@/hooks/useIsMounted'
 
 import { NonceResponseData } from './api/auth/nonce'
-import { SignupRequestData, SignupResponseData } from './api/auth/sign-in'
+import { SignInRequestData, SignInResponseData } from './api/auth/sign-in'
 
 const Wrapper = styled.div(
   ({ theme }) => css`
@@ -55,17 +55,20 @@ export default function Home() {
     message: messageToSign?.data?.message,
   })
 
-  const sendSignatureBody: Partial<SignupRequestData> = {
+  const sendSignatureBody: Partial<SignInRequestData> = {
     address: address,
     signature: signature?.data,
     nonce: messageToSign?.data?.nonce,
   }
 
-  const sendSignature = useFetch<SignupResponseData>(
+  const sendSignature = useFetch<SignInResponseData>(
     signature.data ? '/api/auth/sign-in' : undefined,
     {
       method: 'POST',
       body: JSON.stringify(sendSignatureBody),
+      headers: {
+        'Content-Type': 'application/json',
+      },
     }
   )
 
