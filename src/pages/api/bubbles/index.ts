@@ -115,6 +115,7 @@ class BubblesHandler {
       {
         start_audio_off: true,
         start_video_off: true,
+        eject_at_room_exp: true,
         permissions: {
           canSend: [DailyRoomSendPermission.AUDIO],
           hasPresence: true,
