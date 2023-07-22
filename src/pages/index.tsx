@@ -1,13 +1,14 @@
 import { Button, EthSVG, Heading, Typography, mq } from '@ensdomains/thorin'
+import { useEffect } from 'react'
 import { Toaster } from 'react-hot-toast'
 import styled, { css } from 'styled-components'
+import { useFetch, useLocalStorage } from 'usehooks-ts'
 import { useAccount, useSignMessage } from 'wagmi'
 
 import { Footer } from '@/components/Footer'
 import { Meta } from '@/components/Meta'
 import { Nav } from '@/components/Nav'
 import { Container, Layout } from '@/components/atoms'
-import { useFetch } from '@/hooks/useFetch'
 import { useIsMounted } from '@/hooks/useIsMounted'
 
 import { NonceResponseData } from './api/auth/nonce'
@@ -70,6 +71,17 @@ export default function Home() {
       },
     }
   )
+
+  const [storedToken, setStoredToken] = useLocalStorage(
+    'firebase-token',
+    sendSignature?.data?.token
+  )
+
+  useEffect(() => {
+    if (sendSignature?.data?.token) {
+      setStoredToken(sendSignature?.data?.token)
+    }
+  }, [sendSignature?.data?.token, setStoredToken])
 
   return (
     <>
