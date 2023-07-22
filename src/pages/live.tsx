@@ -1,4 +1,4 @@
-import { Heading, Helper, Spinner } from '@ensdomains/thorin'
+import { Button, Heading, Helper, Spinner } from '@ensdomains/thorin'
 import { Toaster } from 'react-hot-toast'
 
 import { Bubble, BubbleGrid } from '@/components/Bubble'
@@ -27,7 +27,14 @@ export default function Live() {
           {!bubbles ? (
             <Spinner color="bluePrimary" size="medium" />
           ) : bubbles && bubbles.length === 0 ? (
-            <Helper>No Bubbles are currently live</Helper>
+            <div
+              style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
+            >
+              <Helper>No Bubbles are currently live</Helper>
+              <Button as="a" href="/create">
+                Create One
+              </Button>
+            </div>
           ) : (
             <BubbleGrid>
               {bubbles.map((bubble) => {
