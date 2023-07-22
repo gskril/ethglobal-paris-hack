@@ -5,6 +5,8 @@ import toast from 'react-hot-toast'
 import styled, { css } from 'styled-components'
 import { useAccount, useDisconnect, useEnsAvatar, useEnsName } from 'wagmi'
 
+import { useIsMounted } from '@/hooks/useIsMounted'
+
 const Wrapper = styled.div`
   width: 100%;
   display: flex;
@@ -77,12 +79,13 @@ export function Nav() {
   const { openAccountModal } = useAccountModal()
 
   const { disconnect } = useDisconnect()
+  const isMounted = useIsMounted()
 
   return (
     <Wrapper>
       <Name href="/">Bubbles</Name>
 
-      {address ? (
+      {address && isMounted ? (
         <>
           <ProfileMedium
             address={address}
