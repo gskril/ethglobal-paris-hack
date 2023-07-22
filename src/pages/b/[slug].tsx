@@ -155,7 +155,7 @@ function Content({ bubble }: { bubble: Bubble | null }) {
               size="small"
               // disabled={daily?.setLocalAudio}
               onClick={() => {
-                daily?.setLocalAudio(false)
+                daily?.setLocalAudio(true)
                 setIsMuted(false)
               }}
             >
@@ -165,7 +165,7 @@ function Content({ bubble }: { bubble: Bubble | null }) {
             <Button
               size="small"
               onClick={() => {
-                daily?.setLocalAudio(true)
+                daily?.setLocalAudio(false)
                 setIsMuted(true)
               }}
             >
