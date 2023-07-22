@@ -7,12 +7,14 @@ import { GateTag } from '@/components/GateTag'
 import { Meta } from '@/components/Meta'
 import { Nav } from '@/components/Nav'
 import { Card, Container, Layout } from '@/components/atoms'
-import { Bubble } from '@/types'
 import { Listeners } from '@/components/Bubble'
 import { Participant, ParticipantGrid } from '@/components/Participant'
 import { useGlobalContext } from '@/hooks/useGlobalContext'
 import { SiweButton } from '@/components/SiweButton'
 import { useIsMounted } from '@/hooks/useIsMounted'
+import { useBubbleBySlug } from '@/hooks/useBubble'
+import { useFetch } from 'usehooks-ts'
+import { BubbleAccessResponseData } from '../api/bubbles/[id]/access'
 
 export default function Bubble() {
   return (
@@ -40,49 +42,25 @@ function Content() {
   const { address, token } = useGlobalContext()
   const isMounted = useIsMounted()
 
-  const isLoading = false
-  const isAuthed = false
+  const bubble = useBubbleBySlug(slug as string)
+  const auth = useFetch<BubbleAccessResponseData>(
+    bubble ? `/api/bubbles/${bubble.id}/access` : undefined,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  )
 
-  const bubble: Bubble = {
-    title: 'Farcaster Dev Call',
-    slug: 'test',
-    gate: 'Farcaster',
-    people: [
-      {
-        address: '',
-        name: 'gregskril.eth',
-        avatar:
-          'https://pbs.twimg.com/profile_images/1134494299104731136/NQ0AB5DD_400x400.jpg',
-        farcaster: '',
-        lens: '',
-      },
-      {
-        address: '',
-        name: 'limone.eth',
-        avatar:
-          'https://pbs.twimg.com/profile_images/1609844701741420544/BsgkaetB_400x400.jpg',
-        farcaster: '',
-        lens: '',
-      },
-      {
-        address: '',
-        name: 'dwr.eth',
-        avatar:
-          'https://pbs.twimg.com/profile_images/1518670972559130624/-G9gNsOp_400x400.png',
-        farcaster: '',
-        lens: '',
-      },
-    ],
-  }
-
-  if (isLoading || !isMounted) {
+  if (!isMounted || !bubble || (!auth.data && !auth.error)) {
     return <Spinner color="bluePrimary" size="medium" />
   }
 
-  if (!isAuthed) {
+  if (auth.error) {
     return (
       <>
-        <Heading style={{ marginBottom: '1rem' }}>{bubble.title}</Heading>
+        <Heading style={{ marginBottom: '1rem' }}>{bubble.name}</Heading>
 
         <Card
           $gap="medium"
@@ -93,8 +71,8 @@ function Content() {
           }}
         >
           <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <GateTag gate={bubble.gate} />
-            <Listeners people={bubble.people} />
+            <GateTag gate={bubble.privacyType} />
+            <Listeners people={[]} />
           </div>
 
           {address && token ? (
@@ -115,13 +93,13 @@ function Content() {
 
   return (
     <>
-      <Heading style={{ marginBottom: '1rem' }}>{bubble.title}</Heading>
+      <Heading style={{ marginBottom: '1rem' }}>{bubble.name}</Heading>
 
       <Card $gap="medium">
         <ParticipantGrid>
-          {bubble.people.map((person) => (
+          {/* {bubble.people.map((person) => (
             <Participant key={person.name} person={person} />
-          ))}
+          ))} */}
         </ParticipantGrid>
       </Card>
     </>
