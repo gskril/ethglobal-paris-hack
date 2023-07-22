@@ -4,6 +4,7 @@ import {
   createFirestoreCollectionDocument,
   deleteFirestoreCollectionDocument,
   getFirestoreCollectionDocumentById,
+  getFirestoreCollectionDocumentsByWhereConditions,
   getFirstFirestoreCollectionDocumentByWhereConditions,
 } from '@/lib/db/firestore'
 import { Bubble } from '@/lib/db/interfaces/bubble'
@@ -41,4 +42,11 @@ export async function getBubbleByIdOrSlug(
   if (!idOrSlug) return null
   if (isFirebasePushId(idOrSlug)) return await getBubbleById(idOrSlug)
   return await getBubbleBySlug(idOrSlug)
+}
+
+export async function getBubbles(): Promise<Bubble[]> {
+  return await getFirestoreCollectionDocumentsByWhereConditions<Bubble>(
+    COLLECTION_NAME,
+    []
+  )
 }
