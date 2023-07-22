@@ -13,6 +13,9 @@ import {bufferToHex} from "@walletconnect/encoding";
 import {getUserAuthToken} from "@/pages/api/auth/utils";
 import {getUserByAddress} from "@/lib/db/services/user";
 import {createFirestoreCollectionDocument} from "@/lib/db/firestore";
+import {Address, createPublicClient, http} from "viem";
+import {mainnet} from "wagmi/chains";
+import {normalize} from "viem/ens";
 
 export type SignupResponseData = {
     token: string;
@@ -53,12 +56,18 @@ class SignInHandler {
         let userId = user?.id as string
         let isNewUser = false;
         if (!user) {
-            const serverWeb3 = new ethers.InfuraProvider(
-                undefined,
-                process.env.INFURA_ID
-            );
-            const ensLabel = await serverWeb3.lookupAddress(address);
-            userId = await createFirestoreCollectionDocument("users", {address: address.toLowerCase(), ensLabel});
+            const client = createPublicClient({
+                chain: mainnet,
+                transport: http(),
+            })
+            const ensLabel = await client.getEnsName({address: address as Address});
+            let ensAvatarUrl = null;
+            if (ensLabel) {
+                ensAvatarUrl = await client.getEnsAvatar({
+                    name: normalize(ensLabel as string),
+                })
+            }
+            userId = await createFirestoreCollectionDocument("users", {address: address.toLowerCase(), ensLabel, avatarUrl: ensAvatarUrl});
             isNewUser = true;
         }
         const token = getUserAuthToken(user?.id as string);
