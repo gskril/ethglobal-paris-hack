@@ -77,7 +77,7 @@ function Content() {
   const [erc1155ContractAddress, setErc1155ContractAddress] = useState('')
   const [erc1155TokenId, setErc1155TokenId] = useState<number | undefined>()
   const [erc20amount, setErc20amount] = useState<number | undefined>()
-  const [privacyType, setPrivacyType] = useState<Gate>('erc721')
+  const [privacyType, setPrivacyType] = useState<Gate>('open')
   const [sismoGroupId, setSismoGroupId] = useState('')
   const [poapEventId, setPoapEventId] = useState('')
 
@@ -115,6 +115,7 @@ function Content() {
             { label: 'Farcaster', value: 'farcaster' },
             { label: 'ERC-721', value: 'erc721' },
             { label: 'ERC-1155', value: 'erc1155' },
+            { label: 'ERC-20', value: 'erc20' },
             { label: 'POAP', value: 'poap' },
             { label: 'Sismo', value: 'sismo' },
           ]}
@@ -126,6 +127,54 @@ function Content() {
             placeholder="0x253553366Da8546fC250F225fe3d25d0C782303b"
             label="ERC-721 Contract Address"
             onChange={(e) => setErc721ContractAddress(e.target.value)}
+          />
+        )}
+
+        {privacyType === 'erc1155' && (
+          <>
+            <Input
+              placeholder="0x253553366Da8546fC250F225fe3d25d0C782303b"
+              label="ERC-1155 Contract Address"
+              onChange={(e) => setErc1155ContractAddress(e.target.value)}
+            />
+
+            <Input
+              placeholder="1"
+              label="Token ID"
+              onChange={(e) => setErc1155TokenId(parseInt(e.target.value))}
+            />
+          </>
+        )}
+
+        {privacyType === 'erc20' && (
+          <>
+            <Input
+              placeholder="0x253553366Da8546fC250F225fe3d25d0C782303b"
+              label="ERC-20 Contract Address"
+              onChange={(e) => setErc20ContractAddress(e.target.value)}
+            />
+
+            <Input
+              placeholder="200"
+              label="Amount"
+              onChange={(e) => setErc20amount(parseInt(e.target.value))}
+            />
+          </>
+        )}
+
+        {privacyType === 'poap' && (
+          <Input
+            placeholder="128480"
+            label="POAP Event ID"
+            onChange={(e) => setPoapEventId(e.target.value)}
+          />
+        )}
+
+        {privacyType === 'sismo' && (
+          <Input
+            placeholder="0x7e47b71e43f993280bad03a937399333"
+            label="Sismo Group ID"
+            onChange={(e) => setSismoGroupId(e.target.value)}
           />
         )}
 
