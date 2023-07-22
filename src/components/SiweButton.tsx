@@ -18,10 +18,11 @@ export function SiweButton() {
   const { address } = useAccount()
   const isMounted = useIsMounted()
   const { openConnectModal } = useConnectModal()
-  const { token: storedToken, setToken: setStoredToken } = useGlobalContext()
+  const { token, setToken, firebaseToken, setFirebaseToken } =
+    useGlobalContext()
 
   const messageToSign = useFetch<NonceResponseData>(
-    !storedToken ? '/api/auth/nonce' : undefined
+    !token ? '/api/auth/nonce' : undefined
   )
 
   const signature = useSignMessage({ message: messageToSign?.data?.message })
@@ -44,10 +45,16 @@ export function SiweButton() {
   )
 
   useEffect(() => {
-    if (sendSignature?.data?.token) {
-      setStoredToken(sendSignature?.data?.token)
+    if (sendSignature?.data?.token && sendSignature?.data?.firebaseToken) {
+      setToken(sendSignature?.data?.token)
+      setFirebaseToken(sendSignature?.data?.firebaseToken)
     }
-  }, [sendSignature?.data?.token, setStoredToken])
+  }, [
+    sendSignature?.data?.firebaseToken,
+    sendSignature?.data?.token,
+    setFirebaseToken,
+    setToken,
+  ])
 
   return (
     <>
@@ -55,7 +62,7 @@ export function SiweButton() {
         <StyledButton onClick={() => openConnectModal?.()}>
           Connect Wallet
         </StyledButton>
-      ) : !storedToken ? (
+      ) : !token && !firebaseToken ? (
         <StyledButton
           prefix={<EthSVG />}
           disabled={!isMounted}
