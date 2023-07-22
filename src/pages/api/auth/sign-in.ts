@@ -6,13 +6,11 @@ import {
     ValidationPipe,
     createHandler,
 } from 'next-api-decorators'
-import {recoverPersonalSignature} from "@metamask/eth-sig-util";
 
 import {IsEthereumAddress, IsNumber, IsString} from "class-validator";
-import {bufferToHex} from "@walletconnect/encoding";
 import {getUserAuthToken} from "@/pages/api/auth/utils";
 import {createUser, getUserByAddress} from "@/lib/db/services/user";
-import {Address, createPublicClient, http} from "viem";
+import {Address, createPublicClient, http, verifyMessage} from "viem";
 import {mainnet} from "wagmi/chains";
 import {normalize} from "viem/ens";
 
@@ -49,15 +47,9 @@ class SignInHandler {
         // verify the signature
         const message = `Hi there. Sign this message to prove you own this wallet. This doesn't cost anything.\n\nSecurity code (you can ignore this): ${nonce}`;
 
-        // compare if the address from request is the same as the address recovered from the signed message
-        const recoveredAddress = recoverPersonalSignature({
-            signature,
-            data: bufferToHex(Buffer.from(message, "utf8")),
-        });
+        const isVerified = verifyMessage({address: address as Address, message, signature: signature as Address});
 
-        console.log(signature)
-
-        if (address.toLowerCase() !== recoveredAddress.toLowerCase()) {
+        if (!isVerified) {
             throw new UnauthorizedException("Authentication Failed.");
         }
 
