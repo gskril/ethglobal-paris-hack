@@ -1,8 +1,10 @@
 import { Button, Profile, mq } from '@ensdomains/thorin'
 import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import Link from 'next/link'
+import { useEffect } from 'react'
 import toast from 'react-hot-toast'
 import styled, { css } from 'styled-components'
+import { useLocalStorage } from 'usehooks-ts'
 import { useAccount, useDisconnect, useEnsAvatar, useEnsName } from 'wagmi'
 
 import { useIsMounted } from '@/hooks/useIsMounted'
@@ -38,7 +40,7 @@ const sharedStyles = css(
     }
 
     h3 {
-      font-size: ${theme.fontSizes.base};
+      font-size: ${theme.fontSizes.body};
     }
 
     h4 {
@@ -80,6 +82,8 @@ export function Nav() {
 
   const { disconnect } = useDisconnect()
   const isMounted = useIsMounted()
+
+  // TODO: clear firebase token from local storage on disconnect
 
   return (
     <Wrapper>

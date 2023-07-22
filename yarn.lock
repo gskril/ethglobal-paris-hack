@@ -1265,14 +1265,15 @@
   resolved "https://registry.yarnpkg.com/@emotion/unitless/-/unitless-0.8.1.tgz#182b5a4704ef8ad91bde93f7a860a88fd92c79a3"
   integrity sha512-KOEGMu6dmJZtpadb476IsZBclKvILjopjUii3V+7MnXIQCYh8W3NgNcgwo21n9LXZX6EDIKvqfjYxXebDwxKmQ==
 
-"@ensdomains/thorin@^0.6.20":
-  version "0.6.20"
-  resolved "https://registry.yarnpkg.com/@ensdomains/thorin/-/thorin-0.6.20.tgz#0c79a4770799b9d026974a49f2b590c077843e49"
-  integrity sha512-n0eqjh7elzXt/KyauuAYK8SDK4rtoD2V95X+QQ8KbCaJUyWADWOtnAC1G1vBppnS48Ojiybh60LP8XdUQXrbbg==
+"@ensdomains/thorin@^0.6.41":
+  version "0.6.41"
+  resolved "https://registry.yarnpkg.com/@ensdomains/thorin/-/thorin-0.6.41.tgz#0a9dd5206ca272d36861a325e3a6e137cea3a9f6"
+  integrity sha512-3JERXPop+liW8/cV1OO+dLe7g5OdJzb5j6KysQ4Oh82KpBNqfn3MaQMy+fOPOkR+gG4IE0Iwq2bO002A1SFD7A==
   dependencies:
     clsx "^1.1.1"
     focus-visible "^5.2.0"
     lodash "^4.17.21"
+    ts-pattern "^4.3.0"
 
 "@eslint-community/eslint-utils@^4.2.0":
   version "4.4.0"
@@ -7269,6 +7270,11 @@ ts-invariant@^0.10.3:
   integrity sha512-uivwYcQaxAucv1CzRp2n/QdYPo4ILf9VXgH19zEIjFx2EJufV16P0JtJVpYHy89DItG6Kwj2oIUjrcK5au+4tQ==
   dependencies:
     tslib "^2.1.0"
+
+ts-pattern@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/ts-pattern/-/ts-pattern-4.3.0.tgz#7a995b39342f1b00d1507c2d2f3b90ea16e178a6"
+  integrity sha512-pefrkcd4lmIVR0LA49Imjf9DYLK8vtWhqBPA3Ya1ir8xCW0O2yjL9dsCVvI7pCodLC5q7smNpEtDR2yVulQxOg==
 
 tsconfig-paths@^3.14.1:
   version "3.14.2"

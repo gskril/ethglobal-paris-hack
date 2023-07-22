@@ -1,4 +1,5 @@
 import { Button, EthSVG, Heading, Typography, mq } from '@ensdomains/thorin'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { useEffect } from 'react'
 import { Toaster } from 'react-hot-toast'
 import styled, { css } from 'styled-components'
@@ -49,6 +50,7 @@ const StyledButton = styled(Button)`
 export default function Home() {
   const { address } = useAccount()
   const isMounted = useIsMounted()
+  const { openConnectModal } = useConnectModal()
   const messageToSign = useFetch<NonceResponseData>('/api/auth/nonce')
 
   const signature = useSignMessage({
@@ -93,13 +95,29 @@ export default function Home() {
         <Container as="main">
           <Wrapper>
             <Title>Audio Chats for Ethereum</Title>
-            <StyledButton
-              prefix={<EthSVG />}
-              disabled={!address || !isMounted}
-              onClick={() => signature.signMessage?.()}
-            >
-              Sign-In with Ethereum
-            </StyledButton>
+            {!address || !isMounted ? (
+              <StyledButton onClick={() => openConnectModal?.()}>
+                Connect Wallet
+              </StyledButton>
+            ) : !storedToken ? (
+              <StyledButton
+                prefix={<EthSVG />}
+                disabled={!isMounted}
+                onClick={() => signature.signMessage?.()}
+              >
+                Sign-In with Ethereum
+              </StyledButton>
+            ) : (
+              <Button
+                as="a"
+                href="/live"
+                style={{
+                  width: 'fit-content',
+                }}
+              >
+                Explore Live Bubbles
+              </Button>
+            )}
           </Wrapper>
         </Container>
 

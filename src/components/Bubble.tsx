@@ -15,7 +15,8 @@ export const BubbleGrid = styled.div(
 
 const Title = styled(Typography)(
   ({ theme }) => css`
-    font-size: ${theme.fontSizes.extraLarge};
+    font-size: ${theme.fontSizes.headingFour};
+    line-height: 1.2;
     font-weight: ${theme.fontWeights.bold};
   `
 )
@@ -41,11 +42,11 @@ export const Bubble = ({ title, slug, gate, people }: BubbleProps) => {
   return (
     <Link href={`/b/${slug}`}>
       <Card>
-        <Tag tone={gate === 'Open' ? 'green' : 'accent'}>{gate}</Tag>
+        <Tag colorStyle={gate === 'Open' ? 'greenSecondary' : 'blueSecondary'}>
+          {gate}
+        </Tag>
 
-        <Title as="span" size="base">
-          {title}
-        </Title>
+        <Title asProp="span">{title}</Title>
 
         <div style={{ display: 'flex' }}>
           {people.map((person) => (
