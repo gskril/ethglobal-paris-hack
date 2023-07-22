@@ -13,6 +13,10 @@ type GlobalContextValue = {
   setUser: (user: User) => void
 }
 
+const emptyUser: User = {
+  address: '',
+}
+
 export const GlobalContext = createContext<GlobalContextValue | undefined>(
   undefined
 )
@@ -22,17 +26,18 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const { address } = useAccount()
   const [token, setToken] = useLocalStorage('token', '')
+  const [user, setUser] = useLocalStorage('user', emptyUser)
   const [firebaseToken, setFirebaseToken] = useLocalStorage(
     'firebase-token',
     ''
   )
-  const [user, setUser] = useState<User | undefined>(undefined)
 
   useAccount({
     onDisconnect: () => {
       // remove token from localStorage
       window.localStorage.removeItem('token')
       window.localStorage.removeItem('firebase-token')
+      window.localStorage.removeItem('user')
     },
   })
 
