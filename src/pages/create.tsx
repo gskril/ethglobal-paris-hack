@@ -1,5 +1,5 @@
 import { Button, Heading, Input, Select } from '@ensdomains/thorin'
-import { Toaster } from 'react-hot-toast'
+import { Toaster, toast } from 'react-hot-toast'
 
 import { Footer } from '@/components/Footer'
 import { Meta } from '@/components/Meta'
@@ -15,6 +15,7 @@ import { useState } from 'react'
 import { Gate } from '@/types'
 import { BubblePrivacyType } from '@/lib/db/interfaces/bubble'
 import { useIsMounted } from '@/hooks/useIsMounted'
+import { NextRouter, useRouter } from 'next/router'
 
 export default function Create() {
   return (
@@ -38,6 +39,7 @@ export default function Create() {
 
 async function handleSubmit(
   e: React.FormEvent<HTMLFormElement>,
+  router: NextRouter,
   token: string,
   body: CreateBubbleRequestData
 ) {
@@ -54,15 +56,19 @@ async function handleSubmit(
 
   if (!res.ok) {
     console.error(res)
+    toast.error('Something went wrong')
     return
   }
 
   const bubble = (await res.json()) as CreateBubbleResponseData
+  toast.success('Bubble created')
+  router.push(`/b/${bubble.slug}`)
 }
 
 function Content() {
   const { address, token } = useGlobalContext()
   const isMounted = useIsMounted()
+  const router = useRouter()
 
   const [name, setName] = useState('')
   const [farcasterCastHash, setFarcasterCastHash] = useState('')
@@ -91,7 +97,7 @@ function Content() {
   if (!isMounted) return null
 
   return (
-    <form onSubmit={(e) => handleSubmit(e, token!, body)}>
+    <form onSubmit={(e) => handleSubmit(e, router, token!, body)}>
       <Heading style={{ marginBottom: '1rem' }}>Create a Bubble</Heading>
 
       <Card $gap="medium">
