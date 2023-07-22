@@ -1,12 +1,13 @@
 import { Button, Profile, mq } from '@ensdomains/thorin'
-import { useAccountModal, useConnectModal } from '@rainbow-me/rainbowkit'
+import { useAccountModal } from '@rainbow-me/rainbowkit'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
 import styled, { css } from 'styled-components'
-import { useAccount, useDisconnect, useEnsAvatar, useEnsName } from 'wagmi'
+import { useDisconnect, useEnsAvatar, useEnsName } from 'wagmi'
 
 import { useIsMounted } from '@/hooks/useIsMounted'
 import { useGlobalContext } from '@/hooks/useGlobalContext'
+import { SiweButton } from './SiweButton'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -21,13 +22,6 @@ const Name = styled(Link)`
   font-weight: 600;
   line-height: 3rem;
 `
-
-const StyledButton = styled(Button)(
-  ({ theme }) => css`
-    padding: ${theme.space['3']} ${theme.space['6']};
-    width: fit-content;
-  `
-)
 
 const sharedStyles = css(
   ({ theme }) => css`
@@ -82,7 +76,6 @@ export function Nav() {
   const { data: ensName } = useEnsName({ address: address })
   const { data: ensAvatar } = useEnsAvatar({ name: ensName })
 
-  const { openConnectModal } = useConnectModal()
   const { openAccountModal } = useAccountModal()
 
   const { disconnect } = useDisconnect()
@@ -92,7 +85,7 @@ export function Nav() {
     <Wrapper>
       <Name href="/">Bubbles</Name>
 
-      {address && isMounted ? (
+      {address && token && isMounted ? (
         <div style={{ display: 'flex', gap: '1rem' }}>
           <HideMobile>
             {token && (
@@ -131,9 +124,7 @@ export function Nav() {
           />
         </div>
       ) : (
-        <StyledButton shape="rounded" onClick={openConnectModal}>
-          Connect
-        </StyledButton>
+        <SiweButton />
       )}
     </Wrapper>
   )
