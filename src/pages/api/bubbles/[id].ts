@@ -1,6 +1,7 @@
 import {
   createHandler,
   Delete,
+  Get,
   NotFoundException,
   Param,
   Req,

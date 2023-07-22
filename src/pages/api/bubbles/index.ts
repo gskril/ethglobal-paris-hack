@@ -2,10 +2,6 @@
 import {
   Body,
   createHandler,
-  Delete,
-  Get,
-  NotFoundException,
-  Param,
   Post,
   Req,
   ValidationPipe,
@@ -29,6 +25,7 @@ import slugify from 'slugify'
 import { createBubble } from '@/lib/db/services/bubble'
 import type { NextApiRequest } from 'next'
 import { cleanObject } from '@/lib/utils'
+import { enrichBubble } from '@/pages/api/bubbles/utils'
 
 export type CreateBubbleResponseData = Bubble
 
@@ -69,7 +66,7 @@ export class CreateBubbleDTO {
   erc1155ContractAddress?: string
 
   @IsOptional()
-  @IsNumber()
+  @IsString()
   erc1155TokenId?: string
 
   @IsOptional()
@@ -122,8 +119,14 @@ class BubblesHandler {
         },
       }
     )
-    const newBubbleObj = cleanObject({
+    const newBubbleObj = {
       dailyRoomId: newDailyRoom.id,
+      name: name,
+      slug: bubbleSlug,
+      privacyType: privacyType,
+      userId: req.user!.id as string,
+    }
+    const enrichedBubble = await enrichBubble(privacyType, newBubbleObj, {
       erc1155ContractAddress,
       erc1155TokenId,
       erc20ContractAddress,
@@ -132,15 +135,11 @@ class BubblesHandler {
       farcasterCastHash,
       poapEventId,
       sismoGroupId,
-      name: name,
-      slug: bubbleSlug,
-      privacyType: privacyType,
-      userId: req.user!.id as string,
-    }) as Bubble
-    const newBubbleId = await createBubble(newBubbleObj)
+    })
+    const newBubbleId = await createBubble(enrichedBubble)
     return {
-      id: newBubbleId,
-      ...newBubbleObj,
+      newBubbleId,
+      ...enrichedBubble,
     }
   }
 }

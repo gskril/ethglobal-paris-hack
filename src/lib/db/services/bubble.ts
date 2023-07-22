@@ -6,6 +6,7 @@ import {
   getFirestoreCollectionDocumentById,
   getFirestoreCollectionDocumentsByWhereConditions,
   getFirstFirestoreCollectionDocumentByWhereConditions,
+  updateFirestoreCollectionDocumentById,
 } from '@/lib/db/firestore'
 import { Bubble } from '@/lib/db/interfaces/bubble'
 

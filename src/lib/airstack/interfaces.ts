@@ -1,3 +1,5 @@
+import { TokenType } from '@/lib/db/interfaces/bubble'
+
 export interface AirstackWeb3SocialResponseType {
   Socials: {
     Social: AirstackWeb3Social[]
@@ -30,10 +32,10 @@ export interface AirstackPOAPResponseType {
 export interface AirstackPOAP {
   eventId: string
   poapEvent: {
-    eventName: 'DevCon2'
-    eventURL: 'https://devcon.ethereum.org/'
-    startDate: '2016-09-19T00:00:00Z'
-    endDate: '2016-09-21T00:00:00Z'
+    eventName: string
+    eventURL: string
+    startDate: string
+    endDate: string
     metadata: {
       description: string
       external_url: string
@@ -135,5 +137,51 @@ export interface AirstackERC1155Token {
     description: string
     imageUrl: string
     twitterUrl: string
+  }
+}
+
+export interface AirstackERC20orERC721TokenResponseType {
+  Token: {
+    address: string
+    projectDetails: {
+      collectionName: string
+      description: string
+      discordUrl: string
+      externalUrl: string
+      imageUrl: string
+      twitterUrl: string
+    }
+    name: string
+    symbol: string
+    type: TokenType
+  }
+}
+
+export interface AirstackERC1155TokenResponseType {
+  Token: {
+    address: string
+    projectDetails: {
+      collectionName: string
+      description: string
+      discordUrl: string
+      externalUrl: string
+      imageUrl: string
+      twitterUrl: string
+    }
+    name: string
+    symbol: string
+    type: TokenType
+  }
+  TokenNft: {
+    metaData: {
+      name: string
+      description: string
+      image: string
+      imageData: string
+      backgroundColor: string
+      youtubeUrl: string
+      externalUrl: string
+      animationUrl: string
+    }
   }
 }

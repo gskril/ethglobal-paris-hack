@@ -54,7 +54,7 @@ export const POAPQuery = gql`
   }
 `
 
-export const getERC721TokenQuery = gql`
+export const getERC721TokenBalanceQuery = gql`
   query tokens($tokenAddress: Address!, $address: Identity!) {
     erc721: TokenBalances(
       input: {
@@ -112,7 +112,7 @@ export const getERC721TokenQuery = gql`
   }
 `
 
-export const getERC20TokenQuery = gql`
+export const getERC20TokenBalanceQuery = gql`
   query tokens($tokenAddress: Address!, $address: Identity!) {
     erc20: TokenBalances(
       input: {
@@ -150,7 +150,7 @@ export const getERC20TokenQuery = gql`
   }
 `
 
-export const getERC1155TokenQuery = gql`
+export const getERC1155TokenBalanceQuery = gql`
   query tokens(
     $tokenAddress: Address!
     $tokenId: String!
@@ -188,6 +188,83 @@ export const getERC1155TokenQuery = gql`
             twitterUrl
           }
         }
+      }
+    }
+  }
+`
+
+export const getPoapByEventIdQuery = gql`
+  query getPoapByEventId($eventId: String!) {
+    Poaps(
+      input: {
+        filter: { eventId: { _eq: $eventId } }
+        blockchain: ALL
+        limit: 1
+      }
+    ) {
+      Poap {
+        poapEvent {
+          eventName
+          eventURL
+          startDate
+          endDate
+          metadata
+        }
+      }
+    }
+  }
+`
+
+export const getTokenQuery = gql`
+  query getToken($tokenAddress: Address!) {
+    Token(input: { address: $tokenAddress, blockchain: ethereum }) {
+      address
+      projectDetails {
+        collectionName
+        description
+        discordUrl
+        externalUrl
+        imageUrl
+        twitterUrl
+      }
+      name
+      symbol
+      type
+    }
+  }
+`
+
+export const getERC1155TokenQuery = gql`
+  query GetERC20($tokenAddress: Address!, $tokenId: String!) {
+    Token(input: { address: $tokenAddress, blockchain: ethereum }) {
+      address
+      projectDetails {
+        collectionName
+        description
+        discordUrl
+        externalUrl
+        imageUrl
+        twitterUrl
+      }
+      name
+      symbol
+      type
+      tokenNfts {
+        tokenId
+      }
+    }
+    TokenNft(
+      input: { address: $tokenAddress, tokenId: $tokenId, blockchain: ethereum }
+    ) {
+      metaData {
+        name
+        description
+        image
+        imageData
+        backgroundColor
+        youtubeUrl
+        externalUrl
+        animationUrl
       }
     }
   }
