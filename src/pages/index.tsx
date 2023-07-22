@@ -8,6 +8,7 @@ import { Meta } from '@/components/Meta'
 import { Nav } from '@/components/Nav'
 import { Container, Layout } from '@/components/atoms'
 import { useFetch } from '@/hooks/useFetch'
+import { useIsMounted } from '@/hooks/useIsMounted'
 
 import { NonceResponseData } from './api/auth/nonce'
 import { SignupRequestData, SignupResponseData } from './api/auth/sign-in'
@@ -46,6 +47,7 @@ const StyledButton = styled(Button)`
 
 export default function Home() {
   const { address } = useAccount()
+  const isMounted = useIsMounted()
   const messageToSign = useFetch<NonceResponseData>('/api/auth/nonce')
   console.log({ messageToSign })
 
@@ -81,7 +83,7 @@ export default function Home() {
             <Title>Audio Chats for Ethereum</Title>
             <StyledButton
               prefix={<EthSVG />}
-              disabled={!address}
+              disabled={!address || !isMounted}
               onClick={() => signature.signMessage?.()}
             >
               Sign-In with Ethereum
