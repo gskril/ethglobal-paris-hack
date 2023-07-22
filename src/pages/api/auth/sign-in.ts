@@ -11,7 +11,7 @@ import {ethers} from "ethers";
 import {IsEthereumAddress, IsNumber, IsString} from "class-validator";
 import {bufferToHex} from "@walletconnect/encoding";
 import {getUserAuthToken} from "@/pages/api/auth/utils";
-import {getUserByAddress} from "@/lib/db/services/user";
+import {createUser, getUserByAddress} from "@/lib/db/services/user";
 import {createFirestoreCollectionDocument} from "@/lib/db/firestore";
 import {Address, createPublicClient, http} from "viem";
 import {mainnet} from "wagmi/chains";
@@ -67,7 +67,7 @@ class SignInHandler {
                     name: normalize(ensLabel as string),
                 })
             }
-            userId = await createFirestoreCollectionDocument("users", {address: address.toLowerCase(), ensLabel, avatarUrl: ensAvatarUrl});
+            userId = await createUser({address: address.toLowerCase(), ensLabel: ensLabel as string, avatarUrl: ensAvatarUrl as string});
             isNewUser = true;
         }
         const token = getUserAuthToken(user?.id as string);

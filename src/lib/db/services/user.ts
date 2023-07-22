@@ -1,5 +1,6 @@
 import { auth } from '@/lib/db/firebase'
 import {
+  createFirestoreCollectionDocument,
   getFirestoreCollectionDocumentById,
   getFirstFirestoreCollectionDocumentByWhereConditions,
   getWhereConditionObject,
@@ -18,6 +19,9 @@ export async function getUserByAddress(address: string): Promise<User | null> {
   )
 }
 
+export async function createUser(user: User): Promise<string> {
+  return await createFirestoreCollectionDocument(COLLECTION_NAME, user)
+}
 export async function getCurrentUser(): Promise<User | null> {
   const firebaseUser = auth.currentUser
   return getUserById(firebaseUser?.uid as string)
