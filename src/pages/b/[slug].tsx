@@ -8,8 +8,11 @@ import {
   useRoom,
   useMeetingState,
   DailyAudio,
+  useInputSettings,
 } from '@daily-co/daily-react'
 import { useFetch } from 'usehooks-ts'
+import { useState } from 'react'
+import styled, { css } from 'styled-components'
 
 import { Footer } from '@/components/Footer'
 import { GateTag } from '@/components/GateTag'
@@ -24,11 +27,11 @@ import { useIsMounted } from '@/hooks/useIsMounted'
 import { useBubbleBySlug } from '@/hooks/useBubble'
 import { BubbleAccessResponseData } from '@/pages/api/bubbles/[id]/access'
 import { Bubble } from '@/lib/db/interfaces/bubble'
-import { useEffect } from 'react'
 
 export default function Bubble() {
   const router = useRouter()
   const { slug } = router.query
+  const isMounted = useIsMounted()
   const bubble = useBubbleBySlug(slug as string)
 
   return (
@@ -42,7 +45,7 @@ export default function Bubble() {
         <Nav />
 
         <Container as="main">
-          <Content bubble={bubble} />
+          {isMounted && <Content bubble={bubble} />}
         </Container>
 
         <Footer />
@@ -53,9 +56,24 @@ export default function Bubble() {
   )
 }
 
+const HeadingWrapper = styled.div(
+  ({ theme }) => css`
+    width: 100%;
+    display: flex;
+    gap: ${theme.space['4']};
+    justify-content: space-between;
+
+    .buttons {
+      display: flex;
+      gap: ${theme.space['2']};
+      justify-content: space-between;
+      align-items: center;
+    }
+  `
+)
+
 function Content({ bubble }: { bubble: Bubble | null }) {
   const { address, token } = useGlobalContext()
-  const isMounted = useIsMounted()
 
   const auth = useFetch<BubbleAccessResponseData>(
     bubble ? `/api/bubbles/${bubble.id}/access` : undefined,
@@ -67,14 +85,16 @@ function Content({ bubble }: { bubble: Bubble | null }) {
     }
   )
 
-  const room = useRoom()
+  const [isMuted, setIsMuted] = useState(true)
+
+  // const room = useRoom()
   const daily = useDaily()
   const meetingState = useMeetingState()
   const { present, hidden } = useParticipantCounts()
 
-  console.log(present, hidden, meetingState)
+  console.log('Active users', present + hidden)
 
-  if (!isMounted || !bubble || (!auth.data && !auth.error)) {
+  if (!meetingState || !bubble || (!auth.data && !auth.error)) {
     return <Spinner color="bluePrimary" size="medium" />
   }
 
@@ -114,9 +134,46 @@ function Content({ bubble }: { bubble: Bubble | null }) {
 
   return (
     <>
-      <Heading style={{ marginBottom: '1rem' }}>{bubble.name}</Heading>
+      <HeadingWrapper>
+        <Heading style={{ marginBottom: '1rem' }}>{bubble.name}</Heading>
 
-      <Button onClick={() => daily?.join()}>Join</Button>
+        <div className="buttons">
+          {meetingState === 'joining-meeting' ? (
+            <Spinner color="bluePrimary" size="medium" />
+          ) : meetingState === 'joined-meeting' ? (
+            <Button size="small" onClick={() => daily?.leave()}>
+              Leave
+            </Button>
+          ) : (
+            <Button size="small" onClick={() => daily?.join()}>
+              Join
+            </Button>
+          )}
+
+          {meetingState !== 'joined-meeting' ? null : isMuted ? (
+            <Button
+              size="small"
+              // disabled={daily?.setLocalAudio}
+              onClick={() => {
+                daily?.setLocalAudio(false)
+                setIsMuted(false)
+              }}
+            >
+              Unmute
+            </Button>
+          ) : (
+            <Button
+              size="small"
+              onClick={() => {
+                daily?.setLocalAudio(true)
+                setIsMuted(true)
+              }}
+            >
+              Mute
+            </Button>
+          )}
+        </div>
+      </HeadingWrapper>
 
       <Card $gap="medium">
         <ParticipantGrid>
