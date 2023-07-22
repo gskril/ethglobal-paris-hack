@@ -40,6 +40,9 @@ export const getAddressSocialProfiles = async (
 ): Promise<{ farcasterFName?: string; lensHandle?: string }> => {
   const airstack = new AirstackHelper()
   const web3socials = await airstack.getWeb3SocialsForAddress(address)
+  if (!web3socials || web3socials.length === 0) {
+    return {}
+  }
   const farcasterFName = web3socials.find(
     (social) => social.dappName === 'farcaster'
   )?.profileName
