@@ -1,5 +1,9 @@
 import { UnauthorizedException } from 'next-api-decorators'
+import { Address, createPublicClient, http } from 'viem'
+import { normalize } from 'viem/ens'
+import { mainnet } from 'wagmi/chains'
 
+import { AirstackHelper } from '@/lib/airstack'
 import { CryptoHelper } from '@/lib/crypto'
 import { User } from '@/lib/db/interfaces/user'
 import { getUserById } from '@/lib/db/services/user'
@@ -29,4 +33,41 @@ export async function verifyTokenAndGetUser(token: string): Promise<User> {
     throw new UnauthorizedException('Invalid token: user not found.')
   }
   return user
+}
+
+export const getAddressSocialProfiles = async (
+  address: string
+): Promise<{ farcasterFName?: string; lensHandle?: string }> => {
+  const airstack = new AirstackHelper()
+  const web3socials = await airstack.getWeb3SocialsForAddress(address)
+  const farcasterFName = web3socials.find(
+    (social) => social.dappName === 'farcaster'
+  )?.profileName
+  const lensHandle = web3socials.find(
+    (social) => social.dappName === 'lens'
+  )?.profileName
+  return {
+    lensHandle,
+    farcasterFName,
+  }
+}
+
+export const getAddressENS = async (
+  address: string
+): Promise<{ ensLabel?: string; ensAvatarUrl: string }> => {
+  const client = createPublicClient({
+    chain: mainnet,
+    transport: http(),
+  })
+  const ensLabel = await client.getEnsName({ address: address as Address })
+  let ensAvatarUrl = null
+  if (ensLabel) {
+    ensAvatarUrl = await client.getEnsAvatar({
+      name: normalize(ensLabel as string),
+    })
+  }
+  return {
+    ensLabel: ensLabel as string,
+    ensAvatarUrl: ensAvatarUrl as string,
+  }
 }

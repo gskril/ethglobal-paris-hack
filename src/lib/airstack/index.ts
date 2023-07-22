@@ -7,19 +7,32 @@ import { getWeb3SocialsQuery } from '@/lib/airstack/queries'
 export class AirstackHelper {
   apolloClient: ApolloClient<any>
 
-  constructor(baseUrl: string) {
+  constructor() {
     this.apolloClient = new ApolloClient({
-      link: new HttpLink({ uri: baseUrl, fetch }),
+      link: new HttpLink({
+        uri: 'https://api.airstack.xyz/gql',
+        fetch,
+        headers: { authorization: process.env.AIRSTACK_API_KEY as string },
+      }),
       cache: new InMemoryCache(),
     })
   }
 
   async getWeb3SocialsForAddress(address: string) {
-    const response =
-      await this.apolloClient.query<AirstackWeb3SocialResponseType>({
+    try {
+      console.log({
         query: getWeb3SocialsQuery,
         variables: { address },
       })
-    return response.data.Socials.Social
+      const response =
+        await this.apolloClient.query<AirstackWeb3SocialResponseType>({
+          query: getWeb3SocialsQuery,
+          variables: { address },
+        })
+      return response.data.Socials.Social
+    } catch (e) {
+      console.error('Error while calling Airstack API', e)
+      throw e
+    }
   }
 }

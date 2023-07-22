@@ -8,11 +8,12 @@ import {
 } from 'next-api-decorators'
 
 import {IsEthereumAddress, IsNumber, IsString} from "class-validator";
-import {getUserAuthToken} from "@/pages/api/auth/utils";
+import {getAddressENS, getAddressSocialProfiles, getUserAuthToken} from "@/pages/api/auth/utils";
 import {createUser, getUserByAddress} from "@/lib/db/services/user";
 import {Address, createPublicClient, http, verifyMessage} from "viem";
 import {mainnet} from "wagmi/chains";
 import {normalize} from "viem/ens";
+import {AirstackHelper} from "@/lib/airstack";
 
 export type SignInResponseData = {
     token: string;
@@ -52,21 +53,22 @@ class SignInHandler {
         }
 
         let user = await getUserByAddress(address.toLowerCase());
+
+
+        console.log()
+
         let userId = user?.id as string
         let isNewUser = false;
         if (!user) {
-            const client = createPublicClient({
-                chain: mainnet,
-                transport: http(),
-            })
-            const ensLabel = await client.getEnsName({address: address as Address});
-            let ensAvatarUrl = null;
-            if (ensLabel) {
-                ensAvatarUrl = await client.getEnsAvatar({
-                    name: normalize(ensLabel as string),
-                })
-            }
-            userId = await createUser({address: address.toLowerCase(), ensLabel: ensLabel as string, avatarUrl: ensAvatarUrl as string});
+            const {ensLabel, ensAvatarUrl} = await getAddressENS(address);
+            const {farcasterFName, lensHandle} = await getAddressSocialProfiles(address);
+            userId = await createUser({
+                address: address.toLowerCase(),
+                ensLabel: ensLabel as string,
+                avatarUrl: ensAvatarUrl as string,
+                farcasterFName: farcasterFName as string,
+                lensHandle: lensHandle as string
+            });
             isNewUser = true;
         }
         const token = getUserAuthToken(user?.id as string);
