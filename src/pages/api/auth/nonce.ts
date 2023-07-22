@@ -1,6 +1,11 @@
 import {createHandler, Get} from "next-api-decorators";
 import crypto from "crypto";
 
+export type NonceResponseData = {
+    nonce: number;
+    message: string;
+}
+
 class NonceHandler {
     @Get("/")
     public async nonce() {

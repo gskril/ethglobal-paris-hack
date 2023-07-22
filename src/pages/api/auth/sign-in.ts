@@ -4,6 +4,7 @@ import {
     Post,
     UnauthorizedException,
     ValidationPipe,
+    createHandler,
 } from 'next-api-decorators'
 import {recoverPersonalSignature} from "@metamask/eth-sig-util";
 import {ethers} from "ethers";
@@ -20,6 +21,12 @@ import {normalize} from "viem/ens";
 export type SignupResponseData = {
     token: string;
     isNewUser: boolean;
+}
+
+export type SignupRequestData = {
+    address: string;
+    signature: string;
+    nonce: number;
 }
 
 export class SignupDTO {
@@ -74,3 +81,5 @@ class SignInHandler {
         return {token, isNewUser};
     }
 }
+
+export default createHandler(SignInHandler);
