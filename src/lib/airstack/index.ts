@@ -20,6 +20,6 @@ export class AirstackHelper {
         query: getWeb3SocialsQuery,
         variables: { address },
       })
-    return
+    return response.data.Socials.Social
   }
 }
