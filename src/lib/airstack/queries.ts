@@ -40,36 +40,15 @@ export const POAPQuery = gql`
 `
 
 export const getERC721TokenQuery = gql`
-  query tokens($address: Identity!) {
-    erc20: TokenBalances(
-      input: {
-        filter: { owner: { _in: [$address] }, tokenType: { _in: [ERC20] } }
-        limit: 10
-        blockchain: ethereum
-      }
-    ) {
-      data: TokenBalance {
-        amount
-        formattedAmount
-        chainId
-        id
-        tokenAddress
-        tokenId
-        tokenType
-        token {
-          name
-          symbol
-        }
-      }
-    }
+  query tokens($tokenAddress: Address!, $address: Identity!) {
     erc721: TokenBalances(
       input: {
         filter: {
           owner: { _in: [$address] }
           tokenType: { _in: [ERC721] }
-          tokenAddress: { _nin: ["0x22C1f6050E56d2876009903609a2cC3fEf83B415"] }
+          tokenAddress: { _in: [$tokenAddress] }
         }
-        limit: 10
+        limit: 1
         blockchain: ethereum
       }
     ) {
@@ -105,10 +84,14 @@ export const getERC721TokenQuery = gql`
 `
 
 export const getERC20TokenQuery = gql`
-  query tokens($address: Identity!) {
+  query tokens($tokenAddress: Address!, $address: Identity!) {
     erc20: TokenBalances(
       input: {
-        filter: { owner: { _in: [$address] }, tokenType: { _in: [ERC20] } }
+        filter: {
+          owner: { _in: [$address] }
+          tokenType: { _in: [ERC20] }
+          tokenAddress: { _in: [$tokenAddress] }
+        }
         limit: 10
         blockchain: ethereum
       }

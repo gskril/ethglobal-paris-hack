@@ -1,5 +1,6 @@
 import { Bubble, BubblePrivacyType } from '@/lib/db/interfaces/bubble'
 import { User } from '@/lib/db/interfaces/user'
+import { AirstackHelper } from '@/lib/airstack'
 
 export const checkBubbleAccess = async (bubble: Bubble, user: User) => {
   switch (bubble.privacyType) {
@@ -35,14 +36,26 @@ const ERC20Handler = async (
   amount: number,
   walletAddress: string
 ): Promise<boolean> => {
-  return true
+  const airStack = new AirstackHelper()
+  const erc20tokens = await airStack.getERC20BalanceOfWallet(
+    contractAddress,
+    walletAddress
+  )
+  if (erc20tokens?.length === 0) return false
+  const token = erc20tokens[0]
+  return parseFloat(token.amount) >= amount
 }
 
 const ERC721Handler = async (
   contractAddress: string,
   walletAddress: string
 ): Promise<boolean> => {
-  return true
+  const airStack = new AirstackHelper()
+  const erc20tokens = await airStack.getERC721BalanceOfWallet(
+    contractAddress,
+    walletAddress
+  )
+  return erc20tokens?.length >= 0
 }
 
 const ERC1155Handler = async (
@@ -57,7 +70,12 @@ const POAPHandler = async (
   poapEventId: string,
   walletAddress: string
 ): Promise<boolean> => {
-  return true
+  const airStack = new AirstackHelper()
+  const poaps = await airStack.checkPOAPByEventIdAndWallet(
+    poapEventId,
+    walletAddress
+  )
+  return poaps?.length >= 0
 }
 
 const SismoHandler = async (
