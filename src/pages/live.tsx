@@ -1,12 +1,22 @@
-import { Typography } from '@ensdomains/thorin'
 import { Toaster } from 'react-hot-toast'
 
+import { Bubble, BubbleGrid } from '@/components/Bubble'
 import { Footer } from '@/components/Footer'
 import { Meta } from '@/components/Meta'
 import { Nav } from '@/components/Nav'
 import { Container, Layout } from '@/components/atoms'
+import { Bubble as BubbleType } from '@/types'
 
 export default function Live() {
+  const bubbles: BubbleType[] = [
+    {
+      title: 'Farcaster Dev Call',
+      slug: 'test',
+      gate: 'farcaster',
+      people: [],
+    },
+  ]
+
   return (
     <>
       <Meta />
@@ -15,7 +25,11 @@ export default function Live() {
         <Nav />
 
         <Container as="main">
-          <Typography>All Bubbles</Typography>
+          <BubbleGrid>
+            {bubbles.map((bubble) => (
+              <Bubble key={bubble.slug} {...bubble} />
+            ))}
+          </BubbleGrid>
         </Container>
 
         <Footer />
