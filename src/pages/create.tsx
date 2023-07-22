@@ -45,6 +45,18 @@ async function handleSubmit(
 ) {
   e.preventDefault()
 
+  let farcasterHash = body.farcasterCastHash
+
+  if (farcasterHash && farcasterHash.includes('warpcast.com')) {
+    const res = await fetch(
+      `https://fardrop.xyz/api/warpcast-to-hash?url=${farcasterHash}`
+    )
+    const json = await res.json()
+    farcasterHash = json.hash
+  }
+
+  body.farcasterCastHash = farcasterHash
+
   const res = await fetch('/api/bubbles', {
     method: 'POST',
     headers: {
