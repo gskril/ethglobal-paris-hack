@@ -232,7 +232,7 @@ export const enrichBubble = async (
         imageUrl: poapEvent[0].poapEvent.metadata.image_url,
         name: poapEvent[0].poapEvent.eventName,
         url: poapEvent[0].poapEvent.eventURL,
-        id: poapEvent[0].eventId,
+        id: data.poapEventId as string,
       }
       return bubble
     }

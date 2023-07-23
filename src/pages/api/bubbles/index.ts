@@ -104,6 +104,22 @@ class BubblesHandler {
 
     const dailyHelper = new DailyHelper()
     const bubbleSlug = slugify(name, { lower: true })
+    const newBubbleObj = {
+      name: name,
+      slug: bubbleSlug,
+      privacyType: privacyType,
+      userId: req.user!.id as string,
+    } as Bubble
+    const enrichedBubble = await enrichBubble(privacyType, newBubbleObj, {
+      erc1155ContractAddress,
+      erc1155TokenId,
+      erc20ContractAddress,
+      erc20amount,
+      erc721ContractAddress,
+      farcasterCastHash,
+      poapEventId,
+      sismoGroupId,
+    })
     const newDailyRoom = await dailyHelper.createRoom(
       bubbleSlug,
       privacyType === BubblePrivacyType.OPEN
@@ -119,24 +135,11 @@ class BubblesHandler {
         },
       }
     )
-    const newBubbleObj = {
+
+    const newBubbleId = await createBubble({
+      ...enrichedBubble,
       dailyRoomId: newDailyRoom.id,
-      name: name,
-      slug: bubbleSlug,
-      privacyType: privacyType,
-      userId: req.user!.id as string,
-    }
-    const enrichedBubble = await enrichBubble(privacyType, newBubbleObj, {
-      erc1155ContractAddress,
-      erc1155TokenId,
-      erc20ContractAddress,
-      erc20amount,
-      erc721ContractAddress,
-      farcasterCastHash,
-      poapEventId,
-      sismoGroupId,
     })
-    const newBubbleId = await createBubble(enrichedBubble)
     return {
       newBubbleId,
       ...enrichedBubble,
