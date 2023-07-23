@@ -16,6 +16,7 @@ import {
 import { createUser, getUserByAddress } from '@/lib/db/services/user'
 import { Address, verifyMessage } from 'viem'
 import { auth } from 'firebase-admin'
+import { buildMessage } from '.'
 
 export type SignInResponseData = {
   token: string
@@ -47,7 +48,7 @@ class SignInHandler {
     const { address, signature, nonce } = body
 
     // verify the signature
-    const message = `Hi there. Sign this message to prove you own this wallet. This doesn't cost anything.\n\nSecurity code (you can ignore this): ${nonce}`
+    const message = buildMessage(nonce)
 
     const isVerified = verifyMessage({
       address: address as Address,
