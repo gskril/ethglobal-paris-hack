@@ -153,19 +153,21 @@ function Content({
         >
           <div style={{ display: 'flex', gap: '0.5rem' }}>
             <GateTag gate={bubble.privacyType} />
-            <Listeners people={[]} />
+            {/* <Listeners people={[]} /> */}
           </div>
 
           {address && token ? (
             <>
-              <Heading>Unauthorized</Heading>
-              <Helper>
-                You don&apos;t have access to this Bubble with your connected
-                address
-              </Helper>
-
-              {bubble.privacyType === 'sismo' && (
+              {bubble.privacyType === 'sismo' ? (
                 <SismoConnect bubble={bubble} />
+              ) : (
+                <>
+                  <Heading>Unauthorized</Heading>
+                  <Helper>
+                    You don&apos;t have access to this Bubble with your
+                    connected address
+                  </Helper>
+                </>
               )}
             </>
           ) : (
