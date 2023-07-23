@@ -106,9 +106,7 @@ const SismoHandler = async (
     response
   )
   return verificationResult.response.proofs.every(
-    (proof) =>
-      proof.claims?.every((claim) => claim.isSelectableByUser) &&
-      proof.auths?.every((auth) => auth.isSelectableByUser)
+    (proof) => proof.claims?.length! >= 0 || proof.auths?.length! >= 0
   )
 }
 

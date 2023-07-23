@@ -35,9 +35,6 @@ export class SismoConnectResponseDTO {
   @IsString()
   version!: string
 
-  @IsString()
-  signedMessage?: string
-
   @IsArray()
   proofs: any
 }

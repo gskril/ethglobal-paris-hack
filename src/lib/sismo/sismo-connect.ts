@@ -17,8 +17,6 @@ export const verifySismoResult = async (
   groupIds: { groupId: string }[],
   response: SismoConnectResponse
 ) => {
-  console.log(response)
-
   return await sismoConnect.verify(response, {
     claims: groupIds,
   })

@@ -14,7 +14,7 @@ export function SismoConnect({ bubble }: { bubble: Bubble }) {
   const sismoConnectConfig: SismoConnectConfig = {
     appId: process.env.NEXT_PUBLIC_SISMO_APP_ID!,
     vault: {
-      impersonate: ['gregskril.eth'],
+      impersonate: ['0x8E8C44C72cee669EBcb0933360F194C9b7cC8BEd'],
     },
   }
 
