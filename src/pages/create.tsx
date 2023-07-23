@@ -80,7 +80,7 @@ async function handleSubmit(
   }
 
   setIsLoading(false)
-  const bubble = (await res.json()) as CreateBubbleResponseData
+  const bubble = json as CreateBubbleResponseData
   toast.success('Bubble created')
   router.push(`/b/${bubble.slug}`)
 }
@@ -152,6 +152,7 @@ function Content() {
           <Input
             placeholder="0x253553366Da8546fC250F225fe3d25d0C782303b"
             label="ERC-721 Contract Address"
+            description="Ethereum mainnet only"
             onChange={(e) => setErc721ContractAddress(e.target.value)}
           />
         )}
@@ -161,6 +162,7 @@ function Content() {
             <Input
               placeholder="0x253553366Da8546fC250F225fe3d25d0C782303b"
               label="ERC-1155 Contract Address"
+              description="Ethereum mainnet only"
               onChange={(e) => setErc1155ContractAddress(e.target.value)}
             />
 
@@ -177,6 +179,7 @@ function Content() {
             <Input
               placeholder="0x253553366Da8546fC250F225fe3d25d0C782303b"
               label="ERC-20 Contract Address"
+              description="Ethereum mainnet only"
               onChange={(e) => setErc20ContractAddress(e.target.value)}
             />
 

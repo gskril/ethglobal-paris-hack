@@ -184,17 +184,41 @@ function Content({
           {address && token ? (
             <>
               {bubble.privacyType === 'sismo' ? (
-                <SismoConnect
-                  bubble={bubble}
-                  setIsAuthed={setIsAuthed}
-                  setDailyToken={setDailyToken}
-                />
+                <>
+                  <Typography>
+                    Securely prove that you are part of the{' '}
+                    <strong>{bubble.sismoGroup?.name}</strong> group via Sismo
+                  </Typography>
+                  <SismoConnect
+                    bubble={bubble}
+                    setIsAuthed={setIsAuthed}
+                    setDailyToken={setDailyToken}
+                  />
+                </>
               ) : (
                 <>
                   <Heading>Unauthorized</Heading>
                   <Helper>
-                    You don&apos;t have access to this Bubble with your
-                    connected address
+                    You do not meet the requirements of this bubble:{' '}
+                    <strong>
+                      {bubble.privacyType === 'erc20'
+                        ? `${bubble.token?.amount} ${bubble.token?.metadata?.token?.symbol}`
+                        : bubble.privacyType === 'farcaster'
+                        ? 'Control a Farcaster account'
+                        : bubble.privacyType === 'erc721'
+                        ? `Own an NFT from ${
+                            bubble.token?.metadata?.token?.name ||
+                            bubble.token?.address
+                          }`
+                        : bubble.privacyType === 'erc1155'
+                        ? `Own ${bubble.token?.metadata?.tokenNft?.name} from ${
+                            bubble.token?.metadata?.token?.collectionName ||
+                            bubble.token?.address
+                          }`
+                        : bubble.privacyType === 'poap'
+                        ? `Own a POAP from the event ${bubble.poapEvent?.name}`
+                        : ''}
+                    </strong>
                   </Helper>
                 </>
               )}
@@ -295,21 +319,23 @@ function Content({
       </HeadingWrapper>
 
       <CardCols $active={!!bubble.farcasterCastHash}>
-        <Card $gap="medium">
-          {participants.length > 0 ? (
-            <ParticipantGrid>
-              {participants.map((person) => (
-                <Participant key={person.user_id} person={person} />
-              ))}
-            </ParticipantGrid>
-          ) : (
-            <Helper>There&apos;s nobody here yet :/</Helper>
-          )}
-        </Card>
+        <div>
+          <Card $gap="medium">
+            {participants.length > 0 ? (
+              <ParticipantGrid>
+                {participants.map((person) => (
+                  <Participant key={person.user_id} person={person} />
+                ))}
+              </ParticipantGrid>
+            ) : (
+              <Helper>There&apos;s nobody here yet :/</Helper>
+            )}
+          </Card>
 
-        <Typography style={{ marginTop: '0.5rem' }}>
-          {present} Listeners
-        </Typography>
+          <Typography style={{ marginTop: '0.5rem' }}>
+            {present} Listeners
+          </Typography>
+        </div>
 
         {bubble.farcasterCastHash && (
           <FarcasterDiscussion hash={bubble.farcasterCastHash} />
