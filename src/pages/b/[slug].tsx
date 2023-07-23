@@ -164,9 +164,9 @@ function Content({
         <HeadingWrapper style={{ marginBottom: '1rem' }}>
           <div>
             <Heading>{bubble.name}</Heading>
-            <Typography>
-              Creator: {getUserName(bubbleCreator || undefined)}
-            </Typography>
+            {bubbleCreator && (
+              <Typography>Creator: {getUserName(bubbleCreator)}</Typography>
+            )}
           </div>
         </HeadingWrapper>
 
