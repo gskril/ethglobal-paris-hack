@@ -139,7 +139,6 @@ export const enrichBubble = async (
             twitterUrl: token.projectDetails.twitterUrl,
           },
         },
-        tokenId: data.erc1155TokenId as string,
         type: TokenType.ERC_20,
       }
       return bubble
