@@ -1,4 +1,4 @@
-import { Button, Heading, Input, Select } from '@ensdomains/thorin'
+import { Button, Heading, Helper, Input, Select } from '@ensdomains/thorin'
 import { Toaster, toast } from 'react-hot-toast'
 
 import { Footer } from '@/components/Footer'
@@ -42,7 +42,8 @@ async function handleSubmit(
   router: NextRouter,
   token: string,
   body: CreateBubbleRequestData,
-  setIsLoading: (isLoading: boolean) => void
+  setIsLoading: (isLoading: boolean) => void,
+  setError: (error: string) => void
 ) {
   e.preventDefault()
   setIsLoading(true)
@@ -68,9 +69,12 @@ async function handleSubmit(
     body: JSON.stringify(body),
   })
 
+  const json = await res.json()
+
   if (!res.ok) {
     console.error(res)
     toast.error('Something went wrong')
+    setError(json.message)
     setIsLoading(false)
     return
   }
@@ -86,6 +90,7 @@ function Content() {
   const isMounted = useIsMounted()
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const [name, setName] = useState('')
   const [farcasterCastHash, setFarcasterCastHash] = useState('')
@@ -114,7 +119,11 @@ function Content() {
   if (!isMounted) return null
 
   return (
-    <form onSubmit={(e) => handleSubmit(e, router, token!, body, setIsLoading)}>
+    <form
+      onSubmit={(e) =>
+        handleSubmit(e, router, token!, body, setIsLoading, setError)
+      }
+    >
       <Heading style={{ marginBottom: '1rem' }}>Create a Bubble</Heading>
 
       <Card $gap="medium">
@@ -209,6 +218,8 @@ function Content() {
         ) : (
           <SiweButton />
         )}
+
+        {error && <Helper type="error">{error}</Helper>}
       </Card>
     </form>
   )
