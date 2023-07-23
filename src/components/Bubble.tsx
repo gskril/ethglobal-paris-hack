@@ -65,7 +65,7 @@ export const Bubble = ({
         )}
 
         {/* TODO: add preview of listeners */}
-        <Listeners people={[]} />
+        {/* <Listeners people={[]} /> */}
       </Card>
     </Link>
   )

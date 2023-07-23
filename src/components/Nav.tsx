@@ -50,17 +50,13 @@ const ProfileMedium = styled(Profile)(
   ${mq.sm.min(css`
       max-width: 15rem;
     `)}
-
-  ${mq.xs.max(css`
-      display: none;
-    `)}
   `
 )
 
 const ProfileMobile = styled(Profile)`
   ${sharedStyles}
 
-  ${mq.xs.min(css`
+  ${mq.sm.min(css`
     display: none;
   `)}
 `
@@ -95,25 +91,27 @@ export function Nav() {
             )}
           </HideMobile>
 
-          <ProfileMedium
-            address={address}
-            ensName={ensName || undefined}
-            avatar={ensAvatar ? ensAvatar : undefined}
-            dropdownItems={[
-              {
-                label: 'Copy Address',
-                color: 'text',
-                onClick: async () => {
-                  await copyToClipBoard(address)
+          <HideMobile>
+            <ProfileMedium
+              address={address}
+              ensName={ensName || undefined}
+              avatar={ensAvatar ? ensAvatar : undefined}
+              dropdownItems={[
+                {
+                  label: 'Copy Address',
+                  color: 'text',
+                  onClick: async () => {
+                    await copyToClipBoard(address)
+                  },
                 },
-              },
-              {
-                label: 'Disconnect',
-                color: 'red',
-                onClick: () => disconnect(),
-              },
-            ]}
-          />
+                {
+                  label: 'Disconnect',
+                  color: 'red',
+                  onClick: () => disconnect(),
+                },
+              ]}
+            />
+          </HideMobile>
 
           <ProfileMobile
             size="small"
