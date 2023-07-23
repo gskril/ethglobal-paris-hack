@@ -19,6 +19,7 @@ import {
 import { useFetch } from 'usehooks-ts'
 import { useEffect, useState } from 'react'
 import styled, { css } from 'styled-components'
+import useSWR from 'swr'
 
 import { Footer } from '@/components/Footer'
 import { GateTag } from '@/components/GateTag'
@@ -371,13 +372,23 @@ const Casts = styled.div(
   `
 )
 
+const fetcher = async (url: string) => {
+  const response = await fetch(url)
+  const data = await response.json()
+  return data
+}
+
 function FarcasterDiscussion({
   hash = '0xe51ceaedf3c9ba6a7009b3f933a30105b82958dd',
 }: {
   hash: string
 }) {
-  const farcasterReplies = useFetch<SearchCasterResponse>(
-    `https://searchcaster.xyz/api/search?merkleRoot=${hash}`
+  const farcasterReplies = useSWR<SearchCasterResponse>(
+    `https://searchcaster.xyz/api/search?merkleRoot=${hash}`,
+    fetcher,
+    {
+      refreshInterval: 10 * 1000,
+    }
   )
 
   const reversedCasts = farcasterReplies.data?.casts.slice().reverse()
