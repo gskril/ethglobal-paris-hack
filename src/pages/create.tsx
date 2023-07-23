@@ -203,6 +203,14 @@ function Content() {
           <Input
             placeholder="0x7e47b71e43f993280bad03a937399333"
             label="Sismo Group ID"
+            description={
+              <a
+                href="https://factory.sismo.io/groups-explorer"
+                target="_blank"
+              >
+                See your options ↗
+              </a>
+            }
             onChange={(e) => setSismoGroupId(e.target.value)}
           />
         )}

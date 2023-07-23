@@ -47,12 +47,20 @@ export const Bubble = ({
   name,
   slug,
   privacyType,
+  token,
+  poapEvent,
+  sismoGroup,
   listenersCount,
 }: BubbleProps) => {
   return (
     <Link href={`/b/${slug}`}>
       <Card>
-        <GateTag gate={privacyType} />
+        <GateTag
+          token={token}
+          poapEvent={poapEvent}
+          sismoGroup={sismoGroup}
+          gate={privacyType}
+        />
 
         <Title asProp="span">{name}</Title>
 
