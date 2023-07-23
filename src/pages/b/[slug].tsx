@@ -216,7 +216,7 @@ function Content({
                             bubble.token?.address
                           }`
                         : bubble.privacyType === 'poap'
-                        ? `Own a POAP from the event ${bubble.poapEvent?.name}`
+                        ? `Own a POAP from the event "${bubble.poapEvent?.name}"`
                         : ''}
                     </strong>
                   </Helper>
