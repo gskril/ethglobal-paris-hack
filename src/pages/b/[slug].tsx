@@ -14,6 +14,7 @@ import {
   useParticipantCounts,
   useMeetingState,
   DailyAudio,
+  useActiveParticipant,
 } from '@daily-co/daily-react'
 import { useFetch } from 'usehooks-ts'
 import { useEffect, useState } from 'react'
@@ -137,7 +138,6 @@ function Content({
   useEffect(() => {
     if (auth.data) {
       setIsAuthed(true)
-      console.log(`Got auth data from sismo`, auth.data.accessToken)
       setDailyToken(auth.data.accessToken)
     }
   }, [auth])
@@ -148,9 +148,12 @@ function Content({
   const meetingState = useMeetingState()
   const { present } = useParticipantCounts()
   const _participants = daily?.participants()
+  const activeParticipant = useActiveParticipant()
   const participants = Object.values(_participants || {})
 
-  console.log('Active listeners', present)
+  useEffect(() => {
+    console.log('Active listeners', present)
+  }, [present, activeParticipant])
 
   if (!meetingState || !bubble || (!auth.data && !auth.error)) {
     return <Spinner color="bluePrimary" size="medium" />

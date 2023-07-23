@@ -79,7 +79,7 @@ export function Nav() {
 
   return (
     <Wrapper>
-      <Name href="/">Bubbles</Name>
+      <Name href="/">🫧 Bubbles</Name>
 
       {address && token && isMounted ? (
         <div style={{ display: 'flex', gap: '1rem' }}>
