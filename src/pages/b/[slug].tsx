@@ -125,7 +125,7 @@ function Content({
   const [dailyToken, setDailyToken] = useState<string | undefined>(undefined)
 
   const auth = useFetch<BubbleAccessResponseData>(
-    bubble ? `/api/bubbles/${bubble.id}/access` : undefined,
+    bubble && token ? `/api/bubbles/${bubble.id}/access` : undefined,
     {
       method: 'POST',
       headers: {
@@ -154,7 +154,7 @@ function Content({
     console.log('Active listeners', present)
   }, [present, activeParticipant])
 
-  if (!meetingState || !bubble || (!auth.data && !auth.error)) {
+  if (!meetingState || !bubble) {
     return <Spinner color="bluePrimary" size="medium" />
   }
 

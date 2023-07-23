@@ -51,11 +51,15 @@ async function handleSubmit(
   let farcasterHash = body.farcasterCastHash
 
   if (farcasterHash && farcasterHash.includes('warpcast.com')) {
-    const res = await fetch(
-      `https://fardrop.xyz/api/warpcast-to-hash?url=${farcasterHash}`
-    )
-    const json = await res.json()
-    farcasterHash = json.hash
+    try {
+      const res = await fetch(
+        `https://fardrop.xyz/api/warpcast-to-hash?url=${farcasterHash}`
+      )
+      const json = await res.json()
+      farcasterHash = json.hash
+    } catch (err) {
+      farcasterHash = undefined
+    }
   }
 
   body.farcasterCastHash = farcasterHash
