@@ -21,9 +21,6 @@ export function SismoConnect({
 
   const sismoConnectConfig: SismoConnectConfig = {
     appId: process.env.NEXT_PUBLIC_SISMO_APP_ID!,
-    vault: {
-      impersonate: ['limone.eth'],
-    },
   }
 
   const [verifying, setVerifying] = useState(false)

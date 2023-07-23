@@ -7,9 +7,6 @@ import { SismoConnectVerifiedResult } from '@sismo-core/sismo-connect-react'
 
 const sismoConnectConfig: SismoConnectConfig = {
   appId: process.env.NEXT_PUBLIC_SISMO_APP_ID as string,
-  vault: {
-    impersonate: ['limone.eth'],
-  },
 }
 
 const sismoConnect = SismoConnect({ config: sismoConnectConfig })
