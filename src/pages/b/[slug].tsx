@@ -36,6 +36,7 @@ import { getUserName } from '@/lib/client-db/services/user'
 import { formatAddress } from '@/lib/utils'
 import { User } from '@/lib/db/interfaces/user'
 import { SismoConnect } from '@/components/SismoConnect'
+import { Mute, Unmute } from '@/assets/icons'
 
 export default function Bubble() {
   const router = useRouter()
@@ -71,8 +72,13 @@ const HeadingWrapper = styled.div(
   ({ theme }) => css`
     width: 100%;
     display: flex;
+    flex-direction: column;
     gap: ${theme.space['4']};
     justify-content: space-between;
+
+    ${mq.sm.min(css`
+      flex-direction: row;
+    `)}
 
     .buttons {
       display: flex;
@@ -96,6 +102,15 @@ const CardCols = styled.div<{ $active?: boolean }>(
     `}
   `
 )
+
+const IconButton = styled(Button)`
+  padding: 0rem;
+  width: 7rem;
+
+  & > div:first-child {
+    transform: scale(1.4);
+  }
+`
 
 function Content({
   bubble,
@@ -184,12 +199,36 @@ function Content({
         <div>
           <Heading>{bubble.name}</Heading>
           <Typography>
-            Creator: {getUserName(bubbleCreator || undefined)}. {present}{' '}
-            Listeners
+            Creator: {getUserName(bubbleCreator || undefined)}
           </Typography>
         </div>
 
         <div className="buttons">
+          {meetingState !== 'joined-meeting' ? null : isMuted ? (
+            <IconButton
+              size="small"
+              shape="circle"
+              // disabled={daily?.setLocalAudio}
+              onClick={() => {
+                daily?.setLocalAudio(true)
+                setIsMuted(false)
+              }}
+            >
+              <Mute />
+            </IconButton>
+          ) : (
+            <IconButton
+              size="small"
+              shape="circle"
+              onClick={() => {
+                daily?.setLocalAudio(false)
+                setIsMuted(true)
+              }}
+            >
+              <Unmute />
+            </IconButton>
+          )}
+
           {meetingState === 'joining-meeting' ? (
             <Spinner color="bluePrimary" size="medium" />
           ) : meetingState === 'joined-meeting' ? (
@@ -214,29 +253,6 @@ function Content({
               }
             >
               Join
-            </Button>
-          )}
-
-          {meetingState !== 'joined-meeting' ? null : isMuted ? (
-            <Button
-              size="small"
-              // disabled={daily?.setLocalAudio}
-              onClick={() => {
-                daily?.setLocalAudio(true)
-                setIsMuted(false)
-              }}
-            >
-              Unmute
-            </Button>
-          ) : (
-            <Button
-              size="small"
-              onClick={() => {
-                daily?.setLocalAudio(false)
-                setIsMuted(true)
-              }}
-            >
-              Mute
             </Button>
           )}
 
@@ -276,6 +292,10 @@ function Content({
             <Helper>There&apos;s nobody here yet :/</Helper>
           )}
         </Card>
+
+        <Typography style={{ marginTop: '0.5rem' }}>
+          {present} Listeners
+        </Typography>
 
         {bubble.farcasterCastHash && (
           <FarcasterDiscussion hash={bubble.farcasterCastHash} />
