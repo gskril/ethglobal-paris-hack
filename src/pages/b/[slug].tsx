@@ -49,7 +49,7 @@ export default function Bubble() {
       url={`https://ethglobal-hq.daily.co/${bubble?.slug}`}
       videoSource={false}
     >
-      <Meta title={`${bubble ? bubble.name : undefined} | Bubbles`} />
+      <Meta title={`${bubble ? `${bubble.name} | Bubbles` : 'Bubbles'}`} />
 
       <Layout $verticalCenter={false}>
         <Nav />
