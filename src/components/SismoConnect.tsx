@@ -8,7 +8,15 @@ import {
 import axios from 'axios'
 import { useState } from 'react'
 
-export function SismoConnect({ bubble }: { bubble: Bubble }) {
+export function SismoConnect({
+  bubble,
+  setIsAuthed,
+  setDailyToken,
+}: {
+  bubble: Bubble
+  setIsAuthed: (isAuthed: boolean) => void
+  setDailyToken: (token: string) => void
+}) {
   const { token } = useGlobalContext()
 
   const sismoConnectConfig: SismoConnectConfig = {
@@ -27,7 +35,7 @@ export function SismoConnect({ bubble }: { bubble: Bubble }) {
     console.log(response)
     setVerifying(true)
     try {
-      await axios.post(
+      const accessRes = await axios.post(
         `/api/bubbles/${bubble.id}/access`,
         {
           sismoResponse: response,
@@ -40,6 +48,8 @@ export function SismoConnect({ bubble }: { bubble: Bubble }) {
         }
       )
       setIsVerified(true)
+      setIsAuthed(true)
+      setDailyToken(accessRes.data.accessToken)
     } catch (e) {
       setError('Invalid response')
       console.error(e)

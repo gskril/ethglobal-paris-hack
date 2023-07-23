@@ -16,7 +16,7 @@ import {
   DailyAudio,
 } from '@daily-co/daily-react'
 import { useFetch } from 'usehooks-ts'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled, { css } from 'styled-components'
 
 import { Footer } from '@/components/Footer'
@@ -121,6 +121,8 @@ function Content({
 }) {
   const router = useRouter()
   const { address, token, user } = useGlobalContext()
+  const [isAuthed, setIsAuthed] = useState(false)
+  const [dailyToken, setDailyToken] = useState<string | undefined>(undefined)
 
   const auth = useFetch<BubbleAccessResponseData>(
     bubble ? `/api/bubbles/${bubble.id}/access` : undefined,
@@ -131,6 +133,14 @@ function Content({
       },
     }
   )
+
+  useEffect(() => {
+    if (auth.data) {
+      setIsAuthed(true)
+      console.log(`Got auth data from sismo`, auth.data.accessToken)
+      setDailyToken(auth.data.accessToken)
+    }
+  }, [auth])
 
   const [isMuted, setIsMuted] = useState(true)
 
@@ -146,7 +156,7 @@ function Content({
     return <Spinner color="bluePrimary" size="medium" />
   }
 
-  if (auth.error) {
+  if (!isAuthed) {
     return (
       <>
         <HeadingWrapper style={{ marginBottom: '1rem' }}>
@@ -174,7 +184,11 @@ function Content({
           {address && token ? (
             <>
               {bubble.privacyType === 'sismo' ? (
-                <SismoConnect bubble={bubble} />
+                <SismoConnect
+                  bubble={bubble}
+                  setIsAuthed={setIsAuthed}
+                  setDailyToken={setDailyToken}
+                />
               ) : (
                 <>
                   <Heading>Unauthorized</Heading>
@@ -238,9 +252,9 @@ function Content({
           ) : (
             <Button
               size="small"
-              onClick={() =>
+              onClick={() => {
                 daily?.join({
-                  token: auth.data?.accessToken,
+                  token: auth.data?.accessToken || dailyToken,
                   userName: getUserName(user) || formatAddress(address!),
                   userData: {
                     avatarUrl: user?.avatarUrl,
@@ -250,7 +264,7 @@ function Content({
                     lensHandle: user?.lensHandle,
                   },
                 })
-              }
+              }}
             >
               Join
             </Button>
