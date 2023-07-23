@@ -12,7 +12,7 @@ import '@/styles/style.scss'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <PlausibleProvider domain="example.com" trackOutboundLinks>
+    <PlausibleProvider domain="thebubbles.xyz" trackOutboundLinks>
       <WagmiConfig config={wagmiConfig}>
         <ThemeProvider theme={lightTheme}>
           <ThorinGlobalStyles />
