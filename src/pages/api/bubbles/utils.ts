@@ -235,11 +235,7 @@ export const enrichBubble = async (
       }
       return bubble
     }
-    case BubblePrivacyType.FARCASTER:
-      bubble.farcasterCastHash = data.farcasterCastHash
-      break
     default:
       return bubble
   }
-  return bubble
 }

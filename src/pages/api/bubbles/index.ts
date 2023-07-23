@@ -109,6 +109,7 @@ class BubblesHandler {
       slug: bubbleSlug,
       privacyType: privacyType,
       userId: req.user!.id as string,
+      farcasterCastHash,
     } as Bubble
     const enrichedBubble = await enrichBubble(privacyType, newBubbleObj, {
       erc1155ContractAddress,
