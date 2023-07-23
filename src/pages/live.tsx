@@ -16,7 +16,7 @@ export default function Live() {
 
   return (
     <>
-      <Meta />
+      <Meta title="Live Conversations | Bubbles" />
 
       <Layout $verticalCenter={false}>
         <Nav />

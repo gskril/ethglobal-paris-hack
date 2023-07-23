@@ -20,7 +20,7 @@ import { NextRouter, useRouter } from 'next/router'
 export default function Create() {
   return (
     <>
-      <Meta />
+      <Meta title="Create a Voice Chat" />
 
       <Layout>
         <Nav />

@@ -25,7 +25,6 @@ import { GateTag } from '@/components/GateTag'
 import { Meta } from '@/components/Meta'
 import { Nav } from '@/components/Nav'
 import { Card, Container, Layout } from '@/components/atoms'
-import { Listeners } from '@/components/Bubble'
 import { Participant, ParticipantGrid } from '@/components/Participant'
 import { useGlobalContext } from '@/hooks/useGlobalContext'
 import { SiweButton } from '@/components/SiweButton'
@@ -50,7 +49,7 @@ export default function Bubble() {
       url={`https://ethglobal-hq.daily.co/${bubble?.slug}`}
       videoSource={false}
     >
-      <Meta />
+      <Meta title={`${bubble ? bubble.name : undefined} | Bubbles`} />
 
       <Layout $verticalCenter={false}>
         <Nav />
@@ -248,8 +247,7 @@ function Content({
           {meetingState !== 'joined-meeting' ? null : isMuted ? (
             <IconButton
               size="small"
-              shape="circle"
-              // disabled={daily?.setLocalAudio}
+              colorStyle="greyPrimary"
               onClick={() => {
                 daily?.setLocalAudio(true)
                 setIsMuted(false)
@@ -260,7 +258,6 @@ function Content({
           ) : (
             <IconButton
               size="small"
-              shape="circle"
               onClick={() => {
                 daily?.setLocalAudio(false)
                 setIsMuted(true)

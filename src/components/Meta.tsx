@@ -6,7 +6,11 @@ interface Props {
   image?: string
 }
 
-export function Meta({ title = 'Bubbles', description, image }: Props) {
+export function Meta({
+  title = 'Bubbles',
+  description = 'Voice chats with your favorite onchain communities',
+  image = 'https://thebubbles.xyz/sharing.jpg',
+}: Props) {
   return (
     <Head>
       <title>{title}</title>
