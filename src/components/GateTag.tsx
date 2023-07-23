@@ -15,8 +15,32 @@ export function GateTag({
   poapEvent?: Bubble['poapEvent']
   sismoGroup?: Bubble['sismoGroup']
 }) {
+  const colorStyle = gate === 'open' ? 'greenSecondary' : 'blueSecondary'
+
+  if (!token && !poapEvent && !sismoGroup) {
+    return (
+      <Tag colorStyle={colorStyle}>
+        {gate === 'erc20'
+          ? 'ERC-20'
+          : gate === 'erc721'
+          ? 'ERC-721'
+          : gate === 'erc1155'
+          ? 'ERC-1155'
+          : gate === 'poap'
+          ? 'POAP'
+          : gate === 'farcaster'
+          ? 'Farcaster'
+          : gate === 'sismo'
+          ? 'Sismo'
+          : gate === 'open'
+          ? 'Open'
+          : gate}
+      </Tag>
+    )
+  }
+
   return (
-    <Tag colorStyle={gate === 'open' ? 'greenSecondary' : 'blueSecondary'}>
+    <Tag colorStyle={colorStyle}>
       {gate === 'erc20'
         ? `${token?.amount} ${token?.metadata?.token?.symbol}`
         : gate === 'poap'
