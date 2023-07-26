@@ -36,6 +36,7 @@ export type CreateBubbleResponseData = Bubble
 
 export type CreateBubbleRequestData = {
   name: string
+  maxParticipants?: number
   farcasterCastHash?: string
   conditions: {
     contractAddress?: string
@@ -104,7 +105,7 @@ class BubblesHandler {
     const bubbleSlug = slugify(name, { lower: true })
     const enrichedConditions = conditions
       ? await enrichBubbleConditions(conditions)
-      : undefined
+      : []
     const newBubbleObj = {
       name: name,
       slug: bubbleSlug,
