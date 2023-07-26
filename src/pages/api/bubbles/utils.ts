@@ -1,6 +1,7 @@
 import {
   Bubble,
-  BubblePrivacyType,
+  BubbleCondition,
+  BubbleConditionType,
   TokenType,
 } from '@/lib/db/interfaces/bubble'
 import { User } from '@/lib/db/interfaces/user'
@@ -8,38 +9,72 @@ import { AirstackHelper } from '@/lib/airstack'
 import { SismoConnectResponse } from '@sismo-core/sismo-connect-server'
 import { verifySismoResult } from '@/lib/sismo/sismo-connect'
 import { SismoHelper } from '@/lib/sismo'
-import { CreateBubbleRequestData } from '@/pages/api/bubbles/index'
+import { BubbleConditionDTO } from '@/pages/api/bubbles/index'
 import { BadRequestException } from 'next-api-decorators'
+import { SismoGroup } from '@/lib/sismo/interfaces'
 
+/**
+ * Check if the user has access to the bubble
+ * @param bubble - Bubble to check
+ * @param user - User to check
+ * @param sismoResponse - Sismo response to check (optional)
+ */
 export const checkBubbleAccess = async (
   bubble: Bubble,
   user: User,
   sismoResponse?: SismoConnectResponse
-) => {
-  switch (bubble.privacyType) {
-    case BubblePrivacyType.OPEN:
+): Promise<boolean> => {
+  const conditions = bubble.conditions
+  if (!conditions || conditions.length === 0) {
+    return true
+  }
+  // TODO: Once one condition is true, we can stop checking the others
+  const checkResults = await Promise.all(
+    conditions.map((condition) =>
+      checkBubbleCondition(condition, user, sismoResponse)
+    )
+  )
+  return checkResults.some((result) => result)
+}
+
+/**
+ * Check if the user has access to a specific bubble condition
+ * @param bubbleCondition - Bubble condition to check
+ * @param user - User to check
+ * @param sismoResponse - Sismo response to check (optional)
+ */
+export const checkBubbleCondition = async (
+  bubbleCondition: BubbleCondition,
+  user: User,
+  sismoResponse?: SismoConnectResponse
+): Promise<boolean> => {
+  switch (bubbleCondition.type) {
+    case BubbleConditionType.OPEN:
       return true
-    case BubblePrivacyType.ERC_20:
+    case BubbleConditionType.ERC_20:
       return ERC20Handler(
-        bubble.token?.address!,
-        bubble.token?.amount!,
+        bubbleCondition.token?.address!,
+        bubbleCondition.token?.amount!,
         user.address!
       )
-    case BubblePrivacyType.ERC_721:
-      return ERC721Handler(bubble.token?.address!, user.address!)
-    case BubblePrivacyType.ERC_1155:
+    case BubbleConditionType.ERC_721:
+      return ERC721Handler(bubbleCondition.token?.address!, user.address!)
+    case BubbleConditionType.ERC_1155:
       return ERC1155Handler(
-        bubble.token?.address!,
-        bubble.token?.tokenId!,
+        bubbleCondition.token?.address!,
+        bubbleCondition.token?.tokenId!,
         user.address!
       )
-    case BubblePrivacyType.SISMO:
-      return SismoHandler(bubble.sismoGroup?.id!, sismoResponse!)
-    case BubblePrivacyType.POAP:
-      return POAPHandler(bubble.poapEvent?.id!, user.address!)
-    case BubblePrivacyType.FARCASTER:
+    case BubbleConditionType.SISMO:
+      return SismoHandler(
+        bubbleCondition.sismoGroups!.map((sismoGroup) => sismoGroup.id),
+        sismoResponse!
+      )
+    case BubbleConditionType.POAP:
+      return POAPHandler(bubbleCondition.poapEvent?.id!, user.address!)
+    case BubbleConditionType.FARCASTER:
       return !!user.farcasterFName
-    case BubblePrivacyType.LENS:
+    case BubbleConditionType.LENS:
       return !!user.lensHandle
   }
 }
@@ -98,11 +133,11 @@ const POAPHandler = async (
 }
 
 const SismoHandler = async (
-  sismoGroupId: string,
+  sismoGroupIds: string[],
   response: SismoConnectResponse
 ): Promise<boolean> => {
   const verificationResult = await verifySismoResult(
-    [{ groupId: sismoGroupId }],
+    sismoGroupIds.map((sismoGroupId) => ({ groupId: sismoGroupId })),
     response
   )
   return verificationResult.response.proofs.every(
@@ -110,23 +145,32 @@ const SismoHandler = async (
   )
 }
 
-export const enrichBubble = async (
-  privacyType: BubblePrivacyType,
-  bubble: Bubble,
-  data: Partial<CreateBubbleRequestData>
-): Promise<Bubble> => {
-  switch (privacyType) {
-    case BubblePrivacyType.OPEN:
-      return bubble
-    case BubblePrivacyType.ERC_20: {
+export const enrichBubbleConditions = async (
+  conditions: BubbleConditionDTO[]
+): Promise<BubbleCondition[]> => {
+  return await Promise.all(
+    conditions.map((condition) => enrichBubbleCondition(condition))
+  )
+}
+
+export const enrichBubbleCondition = async (
+  condition: BubbleConditionDTO
+): Promise<BubbleCondition> => {
+  const enrichedCondition: BubbleCondition = {
+    type: condition.type,
+  }
+  switch (condition.type) {
+    case BubbleConditionType.OPEN:
+      return condition
+    case BubbleConditionType.ERC_20: {
       const airstackHelper = new AirstackHelper()
       const token = await airstackHelper.getERC20orERC721TokenByAddress(
-        data.erc20ContractAddress as string
+        condition.contractAddress as string
       )
       if (!token) throw new BadRequestException('Invalid ERC20 token')
-      bubble.token = {
+      enrichedCondition.token = {
         address: token.address,
-        amount: data.erc20amount,
+        amount: condition.amount,
         metadata: {
           token: {
             name: token.name,
@@ -141,15 +185,15 @@ export const enrichBubble = async (
         },
         type: TokenType.ERC_20,
       }
-      return bubble
+      return enrichedCondition
     }
-    case BubblePrivacyType.ERC_721: {
+    case BubbleConditionType.ERC_721: {
       const airstackHelper = new AirstackHelper()
       const token = await airstackHelper.getERC20orERC721TokenByAddress(
-        data.erc721ContractAddress as string
+        condition.contractAddress as string
       )
       if (!token) throw new BadRequestException('Invalid ERC721 token')
-      bubble.token = {
+      enrichedCondition.token = {
         address: token.address,
         metadata: {
           token: {
@@ -163,20 +207,19 @@ export const enrichBubble = async (
             twitterUrl: token.projectDetails.twitterUrl,
           },
         },
-        tokenId: data.erc1155TokenId as string,
         type: TokenType.ERC_721,
       }
-      return bubble
+      return enrichedCondition
     }
-    case BubblePrivacyType.ERC_1155: {
+    case BubbleConditionType.ERC_1155: {
       const airstackHelper = new AirstackHelper()
       const token = await airstackHelper.getERC1155TokenByAddressAndId(
-        data.erc1155ContractAddress as string,
-        data.erc1155TokenId as string
+        condition.contractAddress as string,
+        condition.tokenId as string
       )
       if (!token) throw new BadRequestException('Invalid ERC1155 token')
       token.TokenNft
-      bubble.token = {
+      enrichedCondition.token = {
         address: token.Token.address,
         metadata: {
           token: {
@@ -200,42 +243,51 @@ export const enrichBubble = async (
             animationUrl: token.TokenNft.metaData.animationUrl,
           },
         },
-        tokenId: data.erc1155TokenId as string,
+        tokenId: condition.tokenId as string,
         type: TokenType.ERC_1155,
       }
-      return bubble
+      return enrichedCondition
     }
-    case BubblePrivacyType.SISMO: {
+    case BubbleConditionType.SISMO: {
+      if (condition.sismoGroupIds?.length === 0) {
+        throw new BadRequestException(
+          'Condition of type Sismo must include at least a groupId'
+        )
+      }
       const sismoHelper = new SismoHelper()
-      const sismoGroup = await sismoHelper.getGroup(data.sismoGroupId as string)
-      if (!sismoGroup) throw new BadRequestException('Invalid Sismo Group')
-      bubble.sismoGroup = {
+      const sismoGroups: SismoGroup[] = await Promise.all(
+        (condition?.sismoGroupIds as string[])?.map(
+          async (sismoGroupId) => await sismoHelper.getGroup(sismoGroupId)
+        )
+      )
+      if (!sismoGroups) throw new BadRequestException('Invalid Sismo Group')
+      enrichedCondition.sismoGroups = sismoGroups.map((sismoGroup) => ({
         id: sismoGroup.id,
         description: sismoGroup.description,
         name: sismoGroup.name,
         specs: sismoGroup.specs,
-      }
-      return bubble
+      }))
+      return enrichedCondition
     }
-    case BubblePrivacyType.POAP: {
+    case BubbleConditionType.POAP: {
       const airstackHelper = new AirstackHelper()
       const poapEvent = await airstackHelper.getPoapByEventId(
-        data.poapEventId as string
+        condition.poapEventId as string
       )
       if (!poapEvent || poapEvent?.length === 0)
         throw new BadRequestException('POAP event not found')
-      bubble.poapEvent = {
+      enrichedCondition.poapEvent = {
         description: poapEvent[0].poapEvent.metadata.description,
         externalUrl: poapEvent[0].poapEvent.metadata.external_url,
         homeUrl: poapEvent[0].poapEvent.metadata.home_url,
         imageUrl: poapEvent[0].poapEvent.metadata.image_url,
         name: poapEvent[0].poapEvent.eventName,
         url: poapEvent[0].poapEvent.eventURL,
-        id: data.poapEventId as string,
+        id: condition.poapEventId as string,
       }
-      return bubble
+      return enrichedCondition
     }
     default:
-      return bubble
+      return enrichedCondition
   }
 }

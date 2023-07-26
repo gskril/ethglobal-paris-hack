@@ -13,7 +13,7 @@ import {
 } from './api/bubbles'
 import { useState } from 'react'
 import { Gate } from '@/types'
-import { BubblePrivacyType } from '@/lib/db/interfaces/bubble'
+import { BubbleConditionType } from '@/lib/db/interfaces/bubble'
 import { useIsMounted } from '@/hooks/useIsMounted'
 import { NextRouter, useRouter } from 'next/router'
 
@@ -109,7 +109,7 @@ function Content() {
 
   const body = {
     name,
-    privacyType: privacyType as unknown as BubblePrivacyType,
+    privacyType: privacyType as unknown as BubbleConditionType,
     farcasterCastHash: farcasterCastHash || undefined,
     erc20ContractAddress: erc20ContractAddress || undefined,
     erc721ContractAddress: erc721ContractAddress || undefined,
