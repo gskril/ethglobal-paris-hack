@@ -56,13 +56,11 @@ export function SismoConnect({
   }
 
   if (!isVerified) {
-    console.log(bubble.sismoGroup?.id)
-
     return (
       <>
         <SismoConnectButton
           config={sismoConnectConfig}
-          claims={[{ groupId: bubble.sismoGroup?.id! }]}
+          claims={[{ groupId: bubble.conditions?.[0].sismoGroups?.[0].id }]}
           onResponse={(response: SismoConnectResponse) => {
             if (!hasSentRequest) {
               verify(response)
