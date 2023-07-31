@@ -29,7 +29,6 @@ export function SismoConnect({
   const [hasSentRequest, setHasSentRequest] = useState(false)
 
   const verify = async (response: SismoConnectResponse) => {
-    console.log(response)
     setVerifying(true)
     try {
       const accessRes = await axios.post(
