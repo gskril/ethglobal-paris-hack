@@ -63,7 +63,7 @@ async function handleSubmit(
   }
 
   body.farcasterCastHash = farcasterHash
-
+  console.log('TOKEN', token)
   const res = await fetch('/api/bubbles', {
     method: 'POST',
     headers: {
@@ -128,7 +128,7 @@ function Content() {
   }
 
   if (!isMounted) return null
-
+  console.log('TOKENIII', token)
   return (
     <form
       onSubmit={(e) =>

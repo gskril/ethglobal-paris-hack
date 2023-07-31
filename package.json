@@ -18,6 +18,7 @@
     "@ensdomains/thorin": "^0.6.41",
     "@metamask/eth-sig-util": "^6.0.0",
     "@rainbow-me/rainbowkit": "^1.0.4",
+    "@sentry/nextjs": "^7.61.0",
     "@sismo-core/sismo-connect-react": "^0.0.20",
     "@sismo-core/sismo-connect-server": "^0.0.20",
     "axios": "^1.4.0",

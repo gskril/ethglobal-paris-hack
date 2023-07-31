@@ -109,7 +109,8 @@ class BubblesHandler {
     const newBubbleObj = {
       name: name,
       slug: bubbleSlug,
-      conditions: enrichedConditions,
+      // map needed to conver BubbleConditionDTO to Object (which is accepted by Firebase)
+      conditions: enrichedConditions.map((condition) => ({ ...condition })),
       userId: req.user!.id as string,
       farcasterCastHash,
     } as Bubble
@@ -131,7 +132,6 @@ class BubblesHandler {
         },
       }
     )
-
     const newBubbleId = await createBubble({
       ...newBubbleObj,
       dailyRoomId: newDailyRoom.id,
