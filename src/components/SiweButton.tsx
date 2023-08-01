@@ -51,7 +51,6 @@ export function SiweButton() {
   useEffect(() => {
     const fetchCurrentUserData = async (firebaseToken: string) => {
       const user = await loginWithToken(firebaseToken!)
-      console.log(user)
       setUser(user!)
     }
     if (sendSignature?.data?.token && sendSignature?.data?.firebaseToken) {

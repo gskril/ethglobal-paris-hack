@@ -29,7 +29,6 @@ export function SismoConnect({
   const [hasSentRequest, setHasSentRequest] = useState(false)
 
   const verify = async (response: SismoConnectResponse) => {
-    console.log(response)
     setVerifying(true)
     try {
       const accessRes = await axios.post(
@@ -56,13 +55,11 @@ export function SismoConnect({
   }
 
   if (!isVerified) {
-    console.log(bubble.sismoGroup?.id)
-
     return (
       <>
         <SismoConnectButton
           config={sismoConnectConfig}
-          claims={[{ groupId: bubble.sismoGroup?.id! }]}
+          claims={[{ groupId: bubble.conditions?.[0].sismoGroups?.[0].id }]}
           onResponse={(response: SismoConnectResponse) => {
             if (!hasSentRequest) {
               verify(response)

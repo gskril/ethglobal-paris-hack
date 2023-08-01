@@ -1,4 +1,4 @@
-export enum BubblePrivacyType {
+export enum BubbleConditionType {
   ERC_721 = 'erc721',
   ERC_1155 = 'erc1155',
   ERC_20 = 'erc20',
@@ -9,12 +9,8 @@ export enum BubblePrivacyType {
   OPEN = 'open',
 }
 
-export interface Bubble {
-  id?: string
-  userId: string
-  name: string
-  slug: string
-  privacyType: BubblePrivacyType
+export interface BubbleCondition {
+  type: BubbleConditionType
   poapEvent?: {
     id: string
     name: string
@@ -31,14 +27,22 @@ export interface Bubble {
     amount?: number
     metadata?: Record<string, any>
   }
-  sismoGroup?: {
+  sismoGroups?: {
     id: string
     description: string
     name: string
     specs: string
-  }
+  }[]
+}
+
+export interface Bubble {
+  id?: string
+  userId: string
+  name: string
+  slug: string
+  conditions: BubbleCondition[]
   farcasterCastHash?: string
-  dailyRoomId: string
+  dailyRoomId?: string
 }
 
 export enum TokenType {

@@ -180,17 +180,20 @@ function Content({
           }}
         >
           <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <GateTag gate={bubble.privacyType} />
+            <GateTag gate={bubble.conditions[0].type} />
             {/* <Listeners people={[]} /> */}
           </div>
 
           {address && token ? (
             <>
-              {bubble.privacyType === 'sismo' ? (
+              {bubble.conditions[0].type === 'sismo' ? (
                 <>
                   <Typography>
                     Securely prove that you are part of the{' '}
-                    <strong>{bubble.sismoGroup?.name}</strong> group via Sismo
+                    <strong>
+                      {bubble.conditions[0].sismoGroups?.[0].name}
+                    </strong>{' '}
+                    group via Sismo
                   </Typography>
                   <SismoConnect
                     bubble={bubble}
@@ -204,22 +207,25 @@ function Content({
                   <Helper>
                     You do not meet the requirements of this bubble:{' '}
                     <strong>
-                      {bubble.privacyType === 'erc20'
-                        ? `${bubble.token?.amount} ${bubble.token?.metadata?.token?.symbol}`
-                        : bubble.privacyType === 'farcaster'
+                      {bubble.conditions[0].type === 'erc20'
+                        ? `${bubble.conditions[0].token?.amount} ${bubble.conditions[0].token?.metadata?.token?.symbol}`
+                        : bubble.conditions[0].type === 'farcaster'
                         ? 'Control a Farcaster account'
-                        : bubble.privacyType === 'erc721'
+                        : bubble.conditions[0].type === 'erc721'
                         ? `Own an NFT from ${
-                            bubble.token?.metadata?.token?.name ||
-                            bubble.token?.address
+                            bubble.conditions[0].token?.metadata?.token?.name ||
+                            bubble.conditions[0].token?.address
                           }`
-                        : bubble.privacyType === 'erc1155'
-                        ? `Own ${bubble.token?.metadata?.tokenNft?.name} from ${
-                            bubble.token?.metadata?.token?.collectionName ||
-                            bubble.token?.address
+                        : bubble.conditions[0].type === 'erc1155'
+                        ? `Own ${
+                            bubble.conditions[0].token?.metadata?.tokenNft?.name
+                          } from ${
+                            bubble.conditions[0].token?.metadata?.token
+                              ?.collectionName ||
+                            bubble.conditions[0].token?.address
                           }`
-                        : bubble.privacyType === 'poap'
-                        ? `Own a POAP from the event "${bubble.poapEvent?.name}"`
+                        : bubble.conditions[0].type === 'poap'
+                        ? `Own a POAP from the event "${bubble.conditions[0].poapEvent?.name}"`
                         : ''}
                     </strong>
                   </Helper>

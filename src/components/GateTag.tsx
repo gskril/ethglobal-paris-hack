@@ -8,13 +8,14 @@ export function GateTag({
   gate,
   token,
   poapEvent,
-  sismoGroup,
+  sismoGroups,
 }: {
   gate: Gate
-  token?: Bubble['token']
-  poapEvent?: Bubble['poapEvent']
-  sismoGroup?: Bubble['sismoGroup']
+  token?: Bubble['conditions'][0]['token']
+  poapEvent?: Bubble['conditions'][0]['poapEvent']
+  sismoGroups?: Bubble['conditions'][0]['sismoGroups'] | undefined
 }) {
+  const sismoGroup = sismoGroups?.[0]
   const colorStyle = gate === 'open' ? 'greenSecondary' : 'blueSecondary'
 
   if (!token && !poapEvent && !sismoGroup) {

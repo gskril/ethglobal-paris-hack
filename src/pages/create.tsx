@@ -13,7 +13,7 @@ import {
 } from './api/bubbles'
 import { useState } from 'react'
 import { Gate } from '@/types'
-import { BubblePrivacyType } from '@/lib/db/interfaces/bubble'
+import { BubbleConditionType } from '@/lib/db/interfaces/bubble'
 import { useIsMounted } from '@/hooks/useIsMounted'
 import { NextRouter, useRouter } from 'next/router'
 
@@ -63,7 +63,6 @@ async function handleSubmit(
   }
 
   body.farcasterCastHash = farcasterHash
-
   const res = await fetch('/api/bubbles', {
     method: 'POST',
     headers: {
@@ -109,19 +108,25 @@ function Content() {
 
   const body = {
     name,
-    privacyType: privacyType as unknown as BubblePrivacyType,
+    maxParticipants: 10,
     farcasterCastHash: farcasterCastHash || undefined,
-    erc20ContractAddress: erc20ContractAddress || undefined,
-    erc721ContractAddress: erc721ContractAddress || undefined,
-    erc1155ContractAddress: erc1155ContractAddress || undefined,
-    erc1155TokenId: erc1155TokenId || undefined,
-    erc20amount: erc20amount || undefined,
-    sismoGroupId: sismoGroupId || undefined,
-    poapEventId: poapEventId || undefined,
+    conditions: [
+      {
+        contractAddress:
+          erc20ContractAddress ||
+          erc721ContractAddress ||
+          erc1155ContractAddress ||
+          undefined,
+        tokenId: erc1155TokenId || undefined,
+        amount: erc20amount || undefined,
+        type: privacyType as unknown as BubbleConditionType,
+        sismoGroupId: sismoGroupId ? [sismoGroupId] : undefined,
+        poapEventId: poapEventId || undefined,
+      },
+    ],
   }
 
   if (!isMounted) return null
-
   return (
     <form
       onSubmit={(e) =>

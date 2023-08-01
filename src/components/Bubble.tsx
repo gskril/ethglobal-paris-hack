@@ -46,20 +46,19 @@ type BubbleProps = BubbleType & {
 export const Bubble = ({
   name,
   slug,
-  privacyType,
-  token,
-  poapEvent,
-  sismoGroup,
+  conditions: _conditions,
   listenersCount,
 }: BubbleProps) => {
+  const condition = _conditions?.[0]
+
   return (
     <Link href={`/b/${slug}`}>
       <Card>
         <GateTag
-          token={token}
-          poapEvent={poapEvent}
-          sismoGroup={sismoGroup}
-          gate={privacyType}
+          token={condition.token}
+          poapEvent={condition.poapEvent}
+          sismoGroups={condition.sismoGroups}
+          gate={condition.type}
         />
 
         <Title asProp="span">{name}</Title>

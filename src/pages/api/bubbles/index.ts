@@ -8,13 +8,18 @@ import {
 } from 'next-api-decorators'
 
 import {
+  IsArray,
   IsEthereumAddress,
   IsIn,
+  IsInt,
+  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
+  Max,
+  ValidateNested,
 } from 'class-validator'
-import { Bubble, BubblePrivacyType } from '@/lib/db/interfaces/bubble'
+import { Bubble, BubbleConditionType } from '@/lib/db/interfaces/bubble'
 import { JwtAuthGuard } from '@/lib/middlewares'
 import { DailyHelper } from '@/lib/daily'
 import {
@@ -24,62 +29,68 @@ import {
 import slugify from 'slugify'
 import { createBubble } from '@/lib/db/services/bubble'
 import type { NextApiRequest } from 'next'
-import { cleanObject } from '@/lib/utils'
-import { enrichBubble } from '@/pages/api/bubbles/utils'
+import { Type } from 'class-transformer'
+import { enrichBubbleConditions } from '@/pages/api/bubbles/utils'
 
 export type CreateBubbleResponseData = Bubble
 
 export type CreateBubbleRequestData = {
   name: string
+  maxParticipants?: number
   farcasterCastHash?: string
-  erc20ContractAddress?: string
-  erc721ContractAddress?: string
-  erc1155ContractAddress?: string
-  erc1155TokenId?: string
-  erc20amount?: number
-  privacyType: BubblePrivacyType
-  sismoGroupId?: string
+  conditions: {
+    contractAddress?: string
+    tokenId?: string
+    amount?: number
+    type: BubbleConditionType
+    sismoGroupIds?: string[]
+    poapEventId?: string
+  }[]
+}
+
+export class BubbleConditionDTO {
+  @IsIn(Object.values(BubbleConditionType))
+  type!: BubbleConditionType
+
+  @IsOptional()
+  @IsString()
   poapEventId?: string
+
+  @IsOptional()
+  @IsEthereumAddress()
+  contractAddress?: string
+
+  @IsOptional()
+  @IsString()
+  tokenId?: string
+
+  @IsOptional()
+  @IsNumber()
+  amount?: number
+
+  @IsOptional()
+  @IsArray()
+  sismoGroupIds?: string[]
 }
 
 export class CreateBubbleDTO {
   @IsString()
+  @IsNotEmpty()
   name!: string
 
-  @IsIn(Object.values(BubblePrivacyType))
-  privacyType!: BubblePrivacyType
+  @IsOptional()
+  @IsInt()
+  @Max(200)
+  maxParticipants?: number
 
   @IsOptional()
   @IsString()
   farcasterCastHash?: string
 
   @IsOptional()
-  @IsString()
-  poapEventId?: string
-
-  @IsOptional()
-  @IsEthereumAddress()
-  erc721ContractAddress?: string
-
-  @IsOptional()
-  @IsEthereumAddress()
-  erc1155ContractAddress?: string
-
-  @IsOptional()
-  @IsString()
-  erc1155TokenId?: string
-
-  @IsOptional()
-  @IsEthereumAddress()
-  erc20ContractAddress?: string
-
-  @IsOptional()
-  @IsNumber()
-  erc20amount?: number
-
-  @IsOptional()
-  @IsString()
-  sismoGroupId?: string
+  @Type(() => BubbleConditionDTO)
+  @ValidateNested()
+  conditions?: BubbleConditionDTO[]
 }
 
 class BubblesHandler {
@@ -89,61 +100,46 @@ class BubblesHandler {
     @Req() req: NextApiRequest,
     @Body(ValidationPipe) body: CreateBubbleDTO
   ) {
-    const {
-      name,
-      farcasterCastHash,
-      erc20ContractAddress,
-      erc721ContractAddress,
-      erc1155ContractAddress,
-      erc1155TokenId,
-      erc20amount,
-      privacyType,
-      sismoGroupId,
-      poapEventId,
-    } = body
-
+    const { name, farcasterCastHash, conditions, maxParticipants } = body
     const dailyHelper = new DailyHelper()
     const bubbleSlug = slugify(name, { lower: true })
+    const enrichedConditions = conditions
+      ? await enrichBubbleConditions(conditions)
+      : []
     const newBubbleObj = {
       name: name,
       slug: bubbleSlug,
-      privacyType: privacyType,
+      // map needed to conver BubbleConditionDTO to Object (which is accepted by Firebase)
+      conditions: enrichedConditions.map((condition) => ({ ...condition })),
       userId: req.user!.id as string,
       farcasterCastHash,
     } as Bubble
-    const enrichedBubble = await enrichBubble(privacyType, newBubbleObj, {
-      erc1155ContractAddress,
-      erc1155TokenId,
-      erc20ContractAddress,
-      erc20amount,
-      erc721ContractAddress,
-      farcasterCastHash,
-      poapEventId,
-      sismoGroupId,
-    })
     const newDailyRoom = await dailyHelper.createRoom(
       bubbleSlug,
-      privacyType === BubblePrivacyType.OPEN
+      conditions?.some(
+        (condition) => condition.type === BubbleConditionType.OPEN
+      )
         ? DailyRoomPrivacy.PUBLIC
         : DailyRoomPrivacy.PRIVATE,
       {
         start_audio_off: true,
         start_video_off: true,
         eject_at_room_exp: true,
+        max_participants: maxParticipants ?? 200,
         permissions: {
           canSend: [DailyRoomSendPermission.AUDIO],
           hasPresence: true,
         },
       }
     )
-
     const newBubbleId = await createBubble({
-      ...enrichedBubble,
+      ...newBubbleObj,
       dailyRoomId: newDailyRoom.id,
     })
     return {
       newBubbleId,
-      ...enrichedBubble,
+      dailyRoomId: newDailyRoom.id,
+      ...newBubbleObj,
     }
   }
 }
