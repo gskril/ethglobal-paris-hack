@@ -1,5 +1,5 @@
-import React, { ReactNode, createContext, useEffect, useState } from 'react'
-import { useLocalStorage } from 'usehooks-ts'
+import React, { ReactNode, createContext } from 'react'
+import { useSessionStorage } from 'usehooks-ts'
 import { Address, useAccount } from 'wagmi'
 import { User } from '@/lib/db/interfaces/user'
 
@@ -25,9 +25,9 @@ export const GlobalContextProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const { address } = useAccount()
-  const [token, setToken] = useLocalStorage('token', '')
-  const [user, setUser] = useLocalStorage('user', emptyUser)
-  const [firebaseToken, setFirebaseToken] = useLocalStorage(
+  const [token, setToken] = useSessionStorage('token', '')
+  const [user, setUser] = useSessionStorage('user', emptyUser)
+  const [firebaseToken, setFirebaseToken] = useSessionStorage(
     'firebase-token',
     ''
   )
